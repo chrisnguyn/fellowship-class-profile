@@ -1,0 +1,1 @@
+# Found on Stack Overflow (in JavaScript) - https://stackoverflow.com/questions/18262288/finding-total-contributions-of-a-user-from-github-api
