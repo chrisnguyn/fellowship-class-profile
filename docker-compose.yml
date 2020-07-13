@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/web
+    environment:
+      FLASK_ENV: development
+      PORT: 80
+      WORKERS: 2
+  postgres:
+    image: "postgres:alpine"
