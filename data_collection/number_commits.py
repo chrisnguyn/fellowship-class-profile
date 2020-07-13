@@ -1,13 +1,25 @@
+# This is an example of how you would get number of commits (default is one year)
 # Found on Stack Overflow (in JavaScript) - https://stackoverflow.com/questions/18262288/finding-total-contributions-of-a-user-from-github-api
-# Example of using the GitHub API v4
 
 import requests
 import json
 
-query = """query {
+query = """query { 
     viewer { 
-        login
         name
+        contributionsCollection {
+            contributionCalendar {
+                totalContributions
+                    weeks {
+                        contributionDays {
+                            contributionCount
+                            date
+                            weekday
+                        }
+                    firstDay
+                }
+            }
+        }
     }
 }"""
 
