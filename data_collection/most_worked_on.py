@@ -45,4 +45,8 @@ query = f"""query {{
 
 url = "https://api.github.com/graphql"
 r = requests.post(url, headers={"Authorization": f"token {token}"}, json={"query": query})
-print(r.text)
+
+response = json.loads(r.text)
+print(f"Top {num_repos} contributed to repo:", response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"])
+print("Total number of PRs during Fellowship (to any repo)", response["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"])
+print("PR with the most discussion", response["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"])
