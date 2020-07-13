@@ -17,8 +17,10 @@ query = f"""query {{
       totalIssueContributions
       popularPullRequestContribution {{
         pullRequest {{
+          title
+          url
           merged
-          baseRepository{{
+          repository{{
             name
             id
 						languages(first:1){{
