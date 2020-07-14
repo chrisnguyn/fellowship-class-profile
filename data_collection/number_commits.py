@@ -7,17 +7,9 @@ import json
 query = """query { 
     viewer { 
         name
-        contributionsCollection {
+        contributionsCollection(from: "2020-06-01T00:00:00Z", to: "2020-08-24T23:59:59Z") {
             contributionCalendar {
                 totalContributions
-                    weeks {
-                        contributionDays {
-                            contributionCount
-                            date
-                            weekday
-                        }
-                    firstDay
-                }
             }
         }
     }
@@ -25,4 +17,6 @@ query = """query {
 
 url = "https://api.github.com/graphql"
 r = requests.post(url, headers={"Authorization": "Bearer TOKEN"}, json={"query": query})
-print(r.text)
+num = json.loads(r.text)["data"]["viewer"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]
+
+print('In 12 weeks, you made ' + str(num) + ' commits!')
