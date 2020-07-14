@@ -1,29 +1,40 @@
 # Get ALL issues within time frame per user
 # Need to make a token for authentication, can't use the GraphQL endpoint without it
 
-import requests
+from general.static import count, end_date, endpoints, start_date
+from general.user import username, user_token
 import json
+import requests
 
-# username = "YKo20010"
 # TODO: need to pass username dynamically.
-query = """query {
-    user(login: "YKo20010") {
-        contributionsCollection(from: "2020-06-01T00:00:00Z", to: "2020-08-24T23:59:59Z") {
-            issueContributions(last: 20) {
-                edges {
-                    node {
-                        issue {
-                        bodyText
-                        bodyHTML
-                        id
-                        }
-                    }
-                }
-            }
-        }
-    }
-}"""
+issues_query = f"""query {{
+    user(login: "{username}") {{
+        contributionsCollection(from: "{start_date}", to: "{end_date}") {{
+            issueContributions(last: {count}) {{
+                edges {{
+                    node {{
+                        issue {{
+                            bodyText
+                            bodyHTML
+                            id
+                        }}
+                    }}
+                }}
+            }}
+        }}
+    }}
+}}"""
 
-url = "https://api.github.com/graphql"
-r = requests.post(url, headers={"Authorization": "Bearer TOKEN"}, json={"query": query})
-print(r.text)
+# {'data': {'user': {'contributionsCollection': {'issueContributions': {'edges'
+def get_issues():
+    response = requests.post(
+        endpoints["github"],
+        headers={"Authorization": f"Bearer {user_token}"}, 
+        json={"query": issues_query}
+    )
+    data = json.loads(response.text)
+    issues = data['data']['user']['contributionsCollection']['issueContributions']['edges']
+    return issues
+
+
+print(get_issues())
