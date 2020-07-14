@@ -15,13 +15,13 @@ def update_commit_stats(pr_contribution_nodes, commit_stats):
                 commit_stats[repo_name]["commits"] += pr["commits"]["totalCount"]
                 commit_stats[repo_name]["deletions"] += pr["deletions"]
                 commit_stats[repo_name]["additions"] += pr["additions"]
-                commit_stats[repo_name]["changedFiles"] += pr["changedFiles"]
+                commit_stats[repo_name]["changed_files"] += pr["changedFiles"]
             else:
                 commit_stats[repo_name] = {
                     "commits": pr["commits"]["totalCount"],
                     "deletions": pr["deletions"],
                     "additions": pr["additions"],
-                    "changedFiles": pr["changedFiles"]
+                    "changed_files": pr["changedFiles"]
                 }
 
 
@@ -33,7 +33,7 @@ def get_commit_stats():
         query = f"""  query {{
             user(login:"{username}"){{
                 contributionsCollection(from: "{start_date}", to:"{end_date}"){{
-                    pullRequestContributions(first:10 {cursor_str}){{
+                    pullRequestContributions(first:20 {cursor_str}){{
                         pageInfo{{
                             hasNextPage
                             endCursor
@@ -72,4 +72,21 @@ def get_commit_stats():
 
 
 # get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
-print(get_commit_stats())
+commit_stats_per_repo = get_commit_stats()
+print(commit_stats_per_repo)
+
+#calculate total stats
+num_additions = 0
+num_deletions = 0
+num_files_changes = 0
+num_total_commits = 0
+for repo_name, repo_val in commit_stats_per_repo.items():
+    num_additions += repo_val["additions"]
+    num_deletions += repo_val["deletions"]
+    num_files_changes += repo_val["changed_files"]
+    num_total_commits += repo_val["commits"]
+
+print("Total additions: ", num_additions)
+print("Total deletions: ", num_deletions)
+print("Total files changed: ", num_files_changes)
+print("Total commits in merged PRs: ", num_total_commits)
