@@ -2,7 +2,7 @@ import json
 import requests
 
 
-from general.static import count, end_date, endpoints, start_date
+from general.static import end_date, endpoints, start_date
 from general.user import username, user_token
 
 

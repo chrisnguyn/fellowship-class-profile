@@ -1,11 +1,10 @@
 import json
-import os
 import requests
 
+from general.static import end_date, endpoints, start_date
+from general.user import username, user_token
 from org_repo_stats import get_all_forked_repos_in_MLH
 
-token = os.environ["GITHUB_API_TOKEN"]
-user = "kbanc"
 
 num_repos = 5
 num_lang = 2
@@ -22,8 +21,8 @@ def get_repos_in_MLH_project_list(repositories):
 
 query = f"""
   query {{
-    user(login:"{user}"){{
-      contributionsCollection(from: "2020-06-01T07:00:00Z", to:"2020-08-24T07:00:00Z" ) {{
+    user(login:"{username}"){{
+      contributionsCollection(from: "{start_date}", to:"{end_date}" ) {{
         totalRepositoriesWithContributedPullRequests
         totalPullRequestContributions
         totalCommitContributions
@@ -58,9 +57,8 @@ query = f"""
     }}
   }}"""
 
-url = "https://api.github.com/graphql"
 r = requests.post(
-    url, headers={"Authorization": f"token {token}"}, json={"query": query})
+    endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": query})
 
 response = json.loads(r.text)
 print(f"Top {num_repos} contributed to repo:",
