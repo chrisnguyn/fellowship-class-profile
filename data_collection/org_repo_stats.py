@@ -1,10 +1,9 @@
 import json
-import os
 import requests
-from typing import Dict
 
-token = os.environ["GITHUB_API_TOKEN"]
-url = "https://api.github.com/graphql"
+from general.static import end_date, endpoints, start_date
+from general.user import username, user_token
+from typing import Dict
 
 
 def get_number_repos_in_MLH(isFork: str = "true") -> int:
@@ -18,7 +17,7 @@ def get_number_repos_in_MLH(isFork: str = "true") -> int:
     }}
     """
     r = requests.post(
-        url, headers={"Authorization": f"token {token}"}, json={"query": num_repo_query})
+        endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": num_repo_query})
     return json.loads(r.text)["data"]["organization"]["repositories"]["totalCount"]
 
 
@@ -45,10 +44,10 @@ def get_all_forked_repos_in_MLH() -> Dict:
     }}"""
 
     r = requests.post(
-        url, headers={"Authorization": f"token {token}"}, json={"query": repo_info_query})
+        endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": repo_info_query})
     return json.loads(r.text)["data"]["organization"]["repositories"]["nodes"]
 
 
 num_original_repo = get_number_repos_in_MLH(isFork="false")
 num_forked_repo = get_number_repos_in_MLH(isFork="true")
-num_repos = get_all_forked_repos_in_MLH()
+all_repos = get_all_forked_repos_in_MLH()

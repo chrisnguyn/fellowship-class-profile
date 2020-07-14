@@ -8,7 +8,7 @@ import requests
 most_active_day_week = f"""query {{
     user(login: "{username}") {{
         name
-        contributionsCollection(from: "2020-06-01T00:00:00Z", to: "2020-08-24T23:59:59Z") {{
+        contributionsCollection(from: "{start_date}", to: "{end_date}") {{
             contributionCalendar {{
                 totalContributions
                 weeks {{
