@@ -1,0 +1,84 @@
+import json
+import os
+import requests
+from typing import Dict, List
+
+token = os.environ["GITHUB_API_TOKEN"]
+user = "kbanc"
+
+def update_ppl_worked_with(pull_request_contributions_nodes: List, ppl_worked_with: Dict):
+    for pull_request in pull_request_contributions_nodes:
+        for participant in pull_request["pullRequest"]["participants"]["nodes"]:
+            if participant["login"] != user: 
+                if participant["login"] in ppl_worked_with:
+                    ppl_worked_with[participant["login"]] += 1
+                else:
+                    ppl_worked_with[participant["login"]] = 1
+
+def customize_query(user, cursor_str, num_users) -> str:
+    return f"""
+            query {{
+            user(login:"{user}"){{
+                contributionsCollection(from: "2020-06-01T07:00:00Z", to:"2020-08-24T07:00:00Z"){{
+                    pullRequestContributions(first:5 {cursor_str}){{
+                    pageInfo{{
+                        endCursor
+                        hasNextPage
+                    }}
+                    nodes{{
+                    pullRequest{{
+                        baseRepository{{
+                        nameWithOwner
+                        }}
+                        participants(first:{num_users}){{
+                        totalCount
+                        nodes{{
+                            login
+                        }}
+                        pageInfo{{
+                            endCursor
+                            hasNextPage
+                        }}
+                        }}
+                    }}
+                    }}
+                }}
+            }}
+            }}
+        }}"""
+
+def get_people_worked_with(user: str) -> Dict:
+    ppl_worked_with = {}
+    cursor = None
+    cursor_str = ""
+    num_users = 1
+    while True:
+        url = "https://api.github.com/graphql"
+        r = requests.post(
+            url, headers={"Authorization": f"token {token}"}, json={"query": customize_query(user, cursor_str, num_users)})
+
+        response = json.loads(r.text)
+        prs = response["data"]["user"]["contributionsCollection"]["pullRequestContributions"]["nodes"]
+
+        new_total = num_users
+        for pr in prs:
+            print('bool in python', pr["pullRequest"]["participants"]["pageInfo"]["hasNextPage"])
+            if pr["pullRequest"]["participants"]["pageInfo"]["hasNextPage"]:
+                if pr["pullRequest"]["participants"]["totalCount"] > new_total:
+                    new_total = pr["pullRequest"]["participants"]["totalCount"]+1
+        if new_total > num_users:
+            num_users = new_total
+            r = requests.post(url, headers={"Authorization": f"token {token}"}, json={"query": customize_query(user, cursor_str, num_users)})
+            response = json.loads(r.text)
+
+        update_ppl_worked_with(response["data"]["user"]["contributionsCollection"]["pullRequestContributions"]["nodes"], ppl_worked_with)
+
+        pageInfo = response["data"]["user"]["contributionsCollection"]["pullRequestContributions"]["pageInfo"]
+        if not pageInfo["hasNextPage"]:
+            break
+        cursor = pageInfo["endCursor"]
+        cursor_str = f", after: \"{cursor}\""
+    return ppl_worked_with
+
+
+print(get_people_worked_with(user))
