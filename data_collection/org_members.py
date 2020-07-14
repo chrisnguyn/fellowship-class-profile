@@ -10,10 +10,6 @@ url = 'https://api.github.com/orgs/MLH-Fellowship/members?page={}'.format(page_n
 while True:
     response = requests.get(url).json()
 
-    if response['message']:
-        print('You were rate limited! Please authenticate yourself for more requests.')
-        return
-
     for user in response:
         print(user['login'])
 

@@ -9,4 +9,4 @@ url = "https://api.github.com/repos/chrisngyn/rosie/commits/36bacfea66defdaa18fe
 response = requests.get(url).json()
 
 print(response["stats"]["total"])  # number of lines changes
-print(response["files"])  # number of files changes in a commit
+print(len(response["files"]))  # number of files changes in a commit
