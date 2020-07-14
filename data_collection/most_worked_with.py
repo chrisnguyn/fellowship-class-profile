@@ -1,10 +1,9 @@
 import json
-import os
 import requests
-from typing import Dict, List
 
-token = os.environ["GITHUB_API_TOKEN"]
-user = "kbanc"
+from general.static import count, end_date, endpoints, start_date
+from general.user import username, user_token
+from typing import Dict, List
 
 
 def update_ppl_worked_with(user: str, pull_request_contributions_nodes: List, ppl_worked_with: Dict):
@@ -56,9 +55,8 @@ def get_people_worked_with(user: str) -> Dict:
     cursor_str = ""
     num_users = 1
     while True:
-        url = "https://api.github.com/graphql"
         r = requests.post(
-            url, headers={"Authorization": f"token {token}"}, json={"query": customize_query(user, cursor_str, num_users)})
+            endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": customize_query(user, cursor_str, num_users)})
 
         response = json.loads(r.text)
         prs = response["data"]["user"]["contributionsCollection"]["pullRequestContributions"]["nodes"]
@@ -70,7 +68,7 @@ def get_people_worked_with(user: str) -> Dict:
                     new_total = pr["pullRequest"]["participants"]["totalCount"]+1
         if new_total > num_users:
             num_users = new_total
-            r = requests.post(url, headers={"Authorization": f"token {token}"}, json={
+            r = requests.post(endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={
                               "query": customize_query(user, cursor_str, num_users)})
             response = json.loads(r.text)
 
@@ -85,6 +83,6 @@ def get_people_worked_with(user: str) -> Dict:
     return ppl_worked_with
 
 
-people = get_people_worked_with(user)
+people = get_people_worked_with(username)
 print("People worked with (desc order):", {k: v for k, v in sorted(
     people.items(), key=lambda item: item[1], reverse=True)})
