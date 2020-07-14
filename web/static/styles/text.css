@@ -1,0 +1,24 @@
+.subheader {
+    font-family: 'Space Mono';
+    font-size: 20px;
+    margin: 8px 0px 8px 0px;
+}
+
+.header {
+    font-family: 'Noto Sans TC';
+    font-size: 36px;
+    font-weight: 700;
+    margin: 16px 0px 16px 0px;
+}
+
+.caption {
+    font-family: 'Noto Sans TC';
+    font-size: 18px;
+}
+
+.title {
+    font-family: 'Noto Sans TC';
+    font-weight: 700;
+    font-size: 72px;
+    text-align: center;
+}
