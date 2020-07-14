@@ -6,7 +6,6 @@ from general.user import username, user_token
 import json
 import requests
 
-# TODO: need to pass username dynamically.
 issues_query = f"""query {{
     user(login: "{username}") {{
         contributionsCollection(from: "{start_date}", to: "{end_date}") {{

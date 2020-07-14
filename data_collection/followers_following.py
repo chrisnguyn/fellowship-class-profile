@@ -1,27 +1,37 @@
 # Get user current number of followers and following.
 
-import requests
+from general.static import count, end_date, endpoints, start_date
+from general.user import username, user_token
 import json
+import requests
 
-query = """query {
-    viewer {
+follower_following_query = f"""query {{
+    user(login: "{username}") {{
         login
-        following {
+        following {{
             totalCount
-        }
-        followers {
+        }}
+        followers {{
             totalCount
-        }
-    }
-}
-"""
+        }}
+    }}
+}}"""
 
-url = "https://api.github.com/graphql"
-r = requests.post(url, headers={"Authorization": "Bearer TOKEN"}, json={"query": query})
 
-user = json.loads(r.text)["data"]["viewer"]["login"]
-followers = str(json.loads(r.text)["data"]["viewer"]["followers"]["totalCount"])
-following = str(json.loads(r.text)["data"]["viewer"]["following"]["totalCount"])
+def get_followers_following():
+    response = requests.post(
+        endpoints["github"],
+        headers={"Authorization": f"Bearer {user_token}"},
+        json={"query": follower_following_query}
+    )
 
-print(user + "'s followers count: " + followers)
-print(user + "'s following count: " + following)
+    return json.loads(response.text)
+
+
+data = get_followers_following()
+login = data["data"]["user"]["login"]
+followers = str(data["data"]["user"]["followers"]["totalCount"])
+following = str(data["data"]["user"]["following"]["totalCount"])
+
+print(login + "'s followers count: " + followers)
+print(login + "'s following count: " + following)
