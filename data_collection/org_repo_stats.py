@@ -23,7 +23,7 @@ def get_number_repos_in_MLH(isFork: str = "true") -> int:
 
 
 def get_all_forked_repos_in_MLH() -> Dict:
-    num_forked_repo = get_number_repos_in_MLH(isFork=True)
+    num_forked_repo = get_number_repos_in_MLH(isFork="true")
     repo_info_query = f"""
     query {{ 
         organization(login: "MLH-Fellowship"){{
