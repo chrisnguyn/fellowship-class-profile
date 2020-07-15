@@ -10,5 +10,16 @@ services:
       FLASK_ENV: development
       PORT: 80
       WORKERS: 2
+    env_file:
+      - ./.env.dev
   postgres:
     image: "postgres:alpine"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=coderman
+      - POSTGRES_PASSWORD=codermanpassword123
+      - POSTGRES_DB=fellowship-class-profile
+
+volumes:
+  postgres_data:
