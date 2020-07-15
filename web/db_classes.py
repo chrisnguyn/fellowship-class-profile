@@ -1,4 +1,4 @@
-from app import db
+from web.app import db
 
 
 class User(db.Model):
@@ -19,7 +19,7 @@ class UserInfo(db.Model):
     __tablename__ = "users_info"
 
     github_username = db.Column(db.String(120), primary_key=True)
-    github_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True)
+    github_id = db.Column(db.String(120), unique=True)
     pod = db.Column(db.String(120))
     num_code_reviews = db.Column(db.Integer)
     num_issues_opened = db.Column(db.Integer)
@@ -40,7 +40,7 @@ class UserInfo(db.Model):
 class Repository(db.Model):
     __tablename__ = "repositories"
 
-    repo_id = db.Column(db.Integer, primary_key=True)
+    repo_id = db.Column(db.String(120), primary_key=True)
     repo_name = db.Column(db.String(120), unique=True)
     repo_author = db.Column(db.String(120))
     primary_language = db.Column(db.String(120))

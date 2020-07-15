@@ -1,8 +1,8 @@
 # Get ALL issues within time frame per user
 # Need to make a token for authentication, can't use the GraphQL endpoint without it
 
-from general.static import count, end_date, endpoints, start_date
-from general.user import username, user_token
+from data_collection.general.static import count, end_date, endpoints, start_date
+from data_collection.general.user import username, user_token
 import json
 import requests
 

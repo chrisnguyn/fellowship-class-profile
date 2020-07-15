@@ -1,7 +1,7 @@
 # Gets your most active day, gets your most active week.
 
-from general.static import count, end_date, endpoints, start_date
-from general.user import username, user_token
+from data_collection.general.static import count, end_date, endpoints, start_date
+from data_collection.general.user import username, user_token
 
 import json
 import requests

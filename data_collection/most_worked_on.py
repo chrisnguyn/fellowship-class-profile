@@ -1,10 +1,10 @@
 import json
 import requests
 
-from general.static import end_date, endpoints, start_date
-from general.user import username, user_token
+from data_collection.general.static import end_date, endpoints, start_date
+from data_collection.general.user import username, user_token
 from typing import Dict
-from org_repo_stats import get_all_forked_repos_in_MLH
+from data_collection.org_repo_stats import get_all_forked_repos_in_MLH
 
 """
 File contains:

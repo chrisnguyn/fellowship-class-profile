@@ -2,8 +2,8 @@ import json
 import requests
 
 
-from general.static import end_date, endpoints, start_date
-from general.user import username, user_token
+from data_collection.general.static import end_date, endpoints, start_date
+from data_collection.general.user import username, user_token
 
 
 def update_commit_stats(pr_contribution_nodes, commit_stats):
