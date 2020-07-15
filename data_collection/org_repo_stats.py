@@ -47,7 +47,7 @@ def get_all_forked_repos_in_MLH() -> Dict:
         endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": repo_info_query})
     return json.loads(r.text)["data"]["organization"]["repositories"]["nodes"]
 
-
-num_original_repo = get_number_repos_in_MLH(isFork="false")
-num_forked_repo = get_number_repos_in_MLH(isFork="true")
-all_repos = get_all_forked_repos_in_MLH()
+if __name__ == "__main__":
+    num_original_repo = get_number_repos_in_MLH(isFork="false")
+    num_forked_repo = get_number_repos_in_MLH(isFork="true")
+    all_repos = get_all_forked_repos_in_MLH()

@@ -70,23 +70,23 @@ def get_commit_stats(user):
         cursor_str = f", after: \"{cursor}\""
     return commit_stats_per_repo
 
+if __name__ == "__main__":
+    # get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
+    commit_stats_per_repo = get_commit_stats(user=username)
+    print(commit_stats_per_repo)
 
-# get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
-commit_stats_per_repo = get_commit_stats(user=username)
-print(commit_stats_per_repo)
+    #calculate total stats
+    num_additions = 0
+    num_deletions = 0
+    num_files_changes = 0
+    num_total_commits = 0
+    for repo_name, repo_val in commit_stats_per_repo.items():
+        num_additions += repo_val["additions"]
+        num_deletions += repo_val["deletions"]
+        num_files_changes += repo_val["changed_files"]
+        num_total_commits += repo_val["commits"]
 
-#calculate total stats
-num_additions = 0
-num_deletions = 0
-num_files_changes = 0
-num_total_commits = 0
-for repo_name, repo_val in commit_stats_per_repo.items():
-    num_additions += repo_val["additions"]
-    num_deletions += repo_val["deletions"]
-    num_files_changes += repo_val["changed_files"]
-    num_total_commits += repo_val["commits"]
-
-print("Total additions: ", num_additions)
-print("Total deletions: ", num_deletions)
-print("Total files changed: ", num_files_changes)
-print("Total commits in merged PRs: ", num_total_commits)
+    print("Total additions: ", num_additions)
+    print("Total deletions: ", num_deletions)
+    print("Total files changed: ", num_files_changes)
+    print("Total commits in merged PRs: ", num_total_commits)

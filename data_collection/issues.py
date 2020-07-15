@@ -27,5 +27,5 @@ def get_issues(user):
     num_issues = data['data']['user']['contributionsCollection']['issueContributions']['totalCount']
     return num_issues
 
-
-print(get_issues(username))
+if __name__ == "__main__":
+    print(get_issues(username))

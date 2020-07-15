@@ -30,8 +30,8 @@ def get_followers_following(user):
 
     return followers, following
 
+if __name__ == "__main__":
+    followers, following = get_followers_following(username)
 
-followers, following = get_followers_following(username)
-
-print(username + "'s followers count: " + followers)
-print(username + "'s following count: " + following)
+    print(username + "'s followers count: " + followers)
+    print(username + "'s following count: " + following)

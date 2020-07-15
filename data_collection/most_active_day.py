@@ -57,12 +57,6 @@ def calculate_max(user):
             max_week_date = counter
 
         counter += 1
-
-    # most number of commits pushed on one day, and what day
-    print(f'Your max day value was {max_day}. This was on {max_day_date}.')
-    # most number of commits made in a week, which week #
-    print(
-        f'Your max week value was {max_week}. This was week number {max_week_date}.')
     
     return {"max_day": {
                 "date": max_day_date,
@@ -74,5 +68,11 @@ def calculate_max(user):
                 }
             }
 
+if __name__ == "__main__":
+    max_stats = calculate_max(user=username)
+    # most number of commits pushed on one day, and what day
+    print(f'Your max day value was {max_stats["max_day"]["contributions"]}. This was on {max_stats["max_day"]["date"]}.')
+    # most number of commits made in a week, which week #
+    print(
+        f'Your max week value was {max_stats["max_week"]["contributions"]}. This was week number {max_stats["max_week"]["week_number"]}.')
 
-calculate_max(user=username)

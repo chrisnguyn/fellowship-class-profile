@@ -53,7 +53,7 @@ def get_num_pr_reviews(user):
     pr_reviews = data['data']['user']['contributionsCollection']['pullRequestReviewContributions']['totalCount']
     return pr_reviews
 
-
-print(get_num_issue_comments(user=username))
-print('')
-print(get_num_pr_reviews(user=username))
+if __name__ == "__main__":
+    print(get_num_issue_comments(user=username))
+    print('')
+    print(get_num_pr_reviews(user=username))

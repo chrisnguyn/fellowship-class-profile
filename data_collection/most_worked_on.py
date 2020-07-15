@@ -70,26 +70,25 @@ def get_most_worked_on(user: str) -> Dict:
     r = requests.post(
         endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": query})
 
-    print(json.loads(r.text))
-
     return json.loads(r.text)
 
 
-response = get_most_worked_on(user=username)
-print(f"Top contributed to repos:",
-      response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"])
+if __name__ == "__main__":
+    response = get_most_worked_on(user=username)
+    print(f"Top contributed to repos:",
+          response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"])
 
-print("Top repos that were part of the MLH open source projects:", get_repos_in_MLH_project_list(
-    response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]))
+    print("Top repos that were part of the MLH open source projects:", get_repos_in_MLH_project_list(
+        response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]))
 
-print("Total number of PRs during Fellowship (to any repo):",
-      response["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"])
+    print("Total number of PRs during Fellowship (to any repo):",
+          response["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"])
 
-print("Total number of repositories contributed to during the Fellowship:",
-      response["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"])
+    print("Total number of repositories contributed to during the Fellowship:",
+          response["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"])
 
-print("PR with the most discussion:",
-      response["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"])
+    print("PR with the most discussion:",
+          response["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"])
 
-print('In 12 weeks, you made {} commits!'.format(
-    response["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]))
+    print('In 12 weeks, you made {} commits!'.format(
+        response["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]))

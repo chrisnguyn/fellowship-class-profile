@@ -83,6 +83,7 @@ def get_people_worked_with(user: str) -> Dict:
     return ppl_worked_with
 
 
-people = get_people_worked_with(username)
-print("People worked with (desc order):", {k: v for k, v in sorted(
-    people.items(), key=lambda item: item[1], reverse=True)})
+if __name__ == "__main__":
+    people = get_people_worked_with(username)
+    print("People worked with (desc order):", {k: v for k, v in sorted(
+        people.items(), key=lambda item: item[1], reverse=True)})
