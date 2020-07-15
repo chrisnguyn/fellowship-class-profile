@@ -5,20 +5,19 @@ from general.user import username, user_token
 import json
 import requests
 
-follower_following_query = f"""query {{
-    user(login: "{username}") {{
-        login
-        following {{
-            totalCount
-        }}
-        followers {{
-            totalCount
-        }}
-    }}
-}}"""
 
-
-def get_followers_following():
+def get_followers_following(user):
+    follower_following_query = f"""query {{
+        user(login: "{user}") {{
+            login
+            following {{
+                totalCount
+            }}
+            followers {{
+                totalCount
+            }}
+        }}
+    }}"""
     response = requests.post(
         endpoints["github"],
         headers={"Authorization": f"Bearer {user_token}"},
@@ -28,7 +27,7 @@ def get_followers_following():
     return json.loads(response.text)
 
 
-data = get_followers_following()
+data = get_followers_following(user=username)
 login = data["data"]["user"]["login"]
 followers = str(data["data"]["user"]["followers"]["totalCount"])
 following = str(data["data"]["user"]["following"]["totalCount"])

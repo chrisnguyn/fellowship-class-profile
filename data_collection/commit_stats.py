@@ -25,13 +25,13 @@ def update_commit_stats(pr_contribution_nodes, commit_stats):
                 }
 
 
-def get_commit_stats():
+def get_commit_stats(user):
     cursor_str = ""
     commit_stats_per_repo = {}
 
     while True:
         query = f"""  query {{
-            user(login:"{username}"){{
+            user(login:"{user}"){{
                 contributionsCollection(from: "{start_date}", to:"{end_date}"){{
                     pullRequestContributions(first:20 {cursor_str}){{
                         pageInfo{{
@@ -72,7 +72,7 @@ def get_commit_stats():
 
 
 # get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
-commit_stats_per_repo = get_commit_stats()
+commit_stats_per_repo = get_commit_stats(user=username)
 print(commit_stats_per_repo)
 
 #calculate total stats
