@@ -2,8 +2,8 @@ import json
 import requests
 
 
-from general.static import end_date, endpoints, start_date
-from general.user import username, user_token
+from data_collection.general.static import end_date, endpoints, start_date
+from data_collection.general.user import username, user_token
 
 
 def update_commit_stats(pr_contribution_nodes, commit_stats):
@@ -25,13 +25,13 @@ def update_commit_stats(pr_contribution_nodes, commit_stats):
                 }
 
 
-def get_commit_stats():
+def get_commit_stats(user):
     cursor_str = ""
     commit_stats_per_repo = {}
 
     while True:
         query = f"""  query {{
-            user(login:"{username}"){{
+            user(login:"{user}"){{
                 contributionsCollection(from: "{start_date}", to:"{end_date}"){{
                     pullRequestContributions(first:20 {cursor_str}){{
                         pageInfo{{
@@ -70,23 +70,23 @@ def get_commit_stats():
         cursor_str = f", after: \"{cursor}\""
     return commit_stats_per_repo
 
+if __name__ == "__main__":
+    # get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
+    commit_stats_per_repo = get_commit_stats(user=username)
+    print(commit_stats_per_repo)
 
-# get commit stats for all PRs you opened (so anything you paired with someone else on won't be included)
-commit_stats_per_repo = get_commit_stats()
-print(commit_stats_per_repo)
+    #calculate total stats
+    num_additions = 0
+    num_deletions = 0
+    num_files_changes = 0
+    num_total_commits = 0
+    for repo_name, repo_val in commit_stats_per_repo.items():
+        num_additions += repo_val["additions"]
+        num_deletions += repo_val["deletions"]
+        num_files_changes += repo_val["changed_files"]
+        num_total_commits += repo_val["commits"]
 
-#calculate total stats
-num_additions = 0
-num_deletions = 0
-num_files_changes = 0
-num_total_commits = 0
-for repo_name, repo_val in commit_stats_per_repo.items():
-    num_additions += repo_val["additions"]
-    num_deletions += repo_val["deletions"]
-    num_files_changes += repo_val["changed_files"]
-    num_total_commits += repo_val["commits"]
-
-print("Total additions: ", num_additions)
-print("Total deletions: ", num_deletions)
-print("Total files changed: ", num_files_changes)
-print("Total commits in merged PRs: ", num_total_commits)
+    print("Total additions: ", num_additions)
+    print("Total deletions: ", num_deletions)
+    print("Total files changed: ", num_files_changes)
+    print("Total commits in merged PRs: ", num_total_commits)

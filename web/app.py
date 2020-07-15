@@ -79,15 +79,3 @@ def logout():
     return redirect(url_for('index'))
 
 
-class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    github_access_token = db.Column(db.String(100))
-    github_username = db.Column(db.String(100), unique=True)
-
-    def __init__(self, email, github_access_token, github_username):
-        self.email = email
-        self.github_access_token = github_access_token
-        self.github_username = github_username
