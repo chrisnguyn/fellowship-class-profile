@@ -37,3 +37,6 @@ def get_members_by_teams():
 
         team_members_master[team] = team_members
     return team_members_master
+
+if __name__ == "__main__":
+    print(get_members_by_teams())
