@@ -24,13 +24,14 @@ def get_followers_following(user):
         json={"query": follower_following_query}
     )
 
-    return json.loads(response.text)
+    data = json.loads(response.text)
+    followers = str(data["data"]["user"]["followers"]["totalCount"])
+    following = str(data["data"]["user"]["following"]["totalCount"])
+
+    return followers, following
 
 
-data = get_followers_following(user=username)
-login = data["data"]["user"]["login"]
-followers = str(data["data"]["user"]["followers"]["totalCount"])
-following = str(data["data"]["user"]["following"]["totalCount"])
+followers, following = get_followers_following(username)
 
-print(login + "'s followers count: " + followers)
-print(login + "'s following count: " + following)
+print(username + "'s followers count: " + followers)
+print(username + "'s following count: " + following)

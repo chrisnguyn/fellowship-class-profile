@@ -8,21 +8,14 @@ import requests
 
 
 # 'data': {'user': {'contributionsCollection': {'user': {'issueComments': {'edges'
-def get_issue_comments(user):
+def get_num_issue_comments(user):
     # Issue comments.
     issue_comment_query = f"""query {{
         user(login: "{user}") {{
             contributionsCollection(from: "{start_date}", to: "{end_date}") {{
                 user {{
                     issueComments(last: {count}) {{
-                        edges {{
-                            node {{
-                                id
-                                bodyHTML
-                                bodyText
-                                url
-                            }}
-                        }}
+                        totalCount
                     }}
                 }}
             }}
@@ -35,37 +28,18 @@ def get_issue_comments(user):
         json={"query": issue_comment_query}
     )
     data = json.loads(response.text)
-    issue_comments = data['data']['user']['contributionsCollection']['user']['issueComments']['edges']
-    return issue_comments
+    num_issue_comments = data['data']['user']['contributionsCollection']['user']['issueComments']['totalCount']
+    return num_issue_comments
 
 
 # 'data': {'user': {'contributionsCollection': {'pullRequestReviewContributions': {'edges'
-def get_pr_reviews(user):
+def get_num_pr_reviews(user):
     # Pull request reviews.
     pr_review_query = f"""query {{
         user(login: "{user}") {{
             contributionsCollection(from: "{start_date}", to: "{end_date}") {{
                 pullRequestReviewContributions(last: {count}) {{
-                    edges {{
-                        node {{
-                            pullRequestReview {{
-                                id
-                                bodyHTML
-                                bodyText
-                                url
-                                comments(last: {count}) {{
-                                    edges {{
-                                        node {{
-                                            id
-                                            bodyHTML
-                                            bodyText
-                                            url
-                                        }}
-                                    }}
-                                }}
-                            }}
-                        }}
-                    }}
+                    totalCount
                 }}
             }}
         }}
@@ -76,10 +50,10 @@ def get_pr_reviews(user):
         json={"query": pr_review_query}
     )
     data = json.loads(response.text)
-    pr_reviews = data['data']['user']['contributionsCollection']['pullRequestReviewContributions']['edges']
+    pr_reviews = data['data']['user']['contributionsCollection']['pullRequestReviewContributions']['totalCount']
     return pr_reviews
 
 
-print(get_issue_comments(user=username))
+print(get_num_issue_comments(user=username))
 print('')
-print(get_pr_reviews(user=username))
+print(get_num_pr_reviews(user=username))

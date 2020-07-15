@@ -17,7 +17,6 @@ File contains:
 """
 
 
-
 def get_repos_in_MLH_project_list(repositories):
     mlh_repo_names = [repo["name"] for repo in get_all_forked_repos_in_MLH()]
     mlh_project_repos = []
@@ -32,6 +31,7 @@ def get_most_worked_on(user: str) -> Dict:
     query = f"""
     query {{
       user(login:"{user}"){{
+		id
         contributionsCollection(from: "{start_date}", to:"{end_date}" ) {{
 			contributionCalendar {{
                 totalContributions
@@ -91,4 +91,5 @@ print("Total number of repositories contributed to during the Fellowship:",
 print("PR with the most discussion:",
       response["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"])
 
-print('In 12 weeks, you made {} commits!'.format(response["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]))
+print('In 12 weeks, you made {} commits!'.format(
+    response["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]))

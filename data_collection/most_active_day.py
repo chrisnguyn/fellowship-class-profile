@@ -29,7 +29,7 @@ def get_most_active_dates(user):
         headers={"Authorization": f"Bearer {user_token}"},
         json={"query": most_active_day_week}
     )
-    
+
     return json.loads(response.text)["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
 
 
@@ -49,17 +49,30 @@ def calculate_max(user):
             if current_day > max_day:
                 max_day = current_day
                 max_day_date = day["date"]
-            
+
             current_week += current_day
-        
+
         if current_week > max_week:
             max_week = current_week
             max_week_date = counter
-        
+
         counter += 1
 
-    print(f'Your max day value was {max_day}. This was on {max_day_date}.')  # most number of commits pushed on one day, and what day
-    print(f'Your max week value was {max_week}. This was week number {max_week_date}.')  # most number of commits made in a week, which week #
+    # most number of commits pushed on one day, and what day
+    print(f'Your max day value was {max_day}. This was on {max_day_date}.')
+    # most number of commits made in a week, which week #
+    print(
+        f'Your max week value was {max_week}. This was week number {max_week_date}.')
+    
+    return {"max_day": {
+                "date": max_day_date,
+                "contributions": max_day
+                },
+            "max_week": {
+                "week_number": max_week_date,
+                "contributions": max_week
+                }
+            }
 
 
 calculate_max(user=username)
