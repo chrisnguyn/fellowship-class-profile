@@ -70,11 +70,23 @@ function renderNavbar(body) {
     }
 
     let tabRectWidth = 130
+
+    function getTabPosition(pathname = window.location.pathname) {
+        switch (pathname) {
+            case pages.CLASS_2020:
+                return width * 0.25 - tabRectWidth / 2
+            case pages.PERSONAL:
+                return width * 0.75 - tabRectWidth / 2
+            case _:
+                return 0
+        }
+    }
+
     let tabRect = svg.append("rect")
         .attr("height", 2)
         .attr("width", tabRectWidth)
         .attr("fill", colors.yellow)
-        .attr("visibility", "hidden")
+        .attr("x", getTabPosition())
         .attr("y", height / 2 + textAttr.size + 4)
 
     svg.append("text")
@@ -89,14 +101,13 @@ function renderNavbar(body) {
         .attr("cursor", "pointer")
         .text("Class of 2020")
         .on("mouseover", function() {
-            tabRect.attr("visibility", "visible")
-                .attr("x", width * 0.25 - tabRectWidth / 2)
+            tabRect.attr("x", getTabPosition(pages.CLASS_2020))
         })
         .on("mouseout", function() {
-            tabRect.attr("visibility", "hidden")
+            tabRect.attr("x", getTabPosition())
         })
         .on("mousedown", function() {
-            // Redirect to class stats.
+            window.location.pathname = pages.CLASS_2020
         })
     svg.append("text")
         .attr("font-family", textAttr.fontFamily)
@@ -110,13 +121,12 @@ function renderNavbar(body) {
         .attr("cursor", "pointer")
         .text("My Fellowship")
         .on("mouseover", function() {
-            tabRect.attr("visibility", "visible")
-                .attr("x", width * 0.75 - tabRectWidth / 2)
+            tabRect.attr("x", getTabPosition(pages.PERSONAL))
         })
         .on("mouseout", function() {
-            tabRect.attr("visibility", "hidden")
+            tabRect.attr("x", getTabPosition())
         })
         .on("mousedown", function() {
-            // Redirect to personal stats.
+            window.location.pathname = pages.PERSONAL
         })
 }

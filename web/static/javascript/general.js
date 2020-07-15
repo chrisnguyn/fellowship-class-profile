@@ -1,1 +1,0 @@
-let current_page = window.location.pathname == "/" ? pages.CLASS_2020 : pages.PERSONAL
