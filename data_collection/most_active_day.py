@@ -2,28 +2,28 @@
 
 from general.static import count, end_date, endpoints, start_date
 from general.user import username, user_token
+
 import json
 import requests
 
-most_active_day_week = f"""query {{
-    user(login: "{username}") {{
-        name
-        contributionsCollection(from: "{start_date}", to: "{end_date}") {{
-            contributionCalendar {{
-                totalContributions
-                weeks {{
-                    contributionDays {{
-                        contributionCount
-                        date
+
+def get_most_active_dates(user):
+    most_active_day_week = f"""query {{
+        user(login: "{user}") {{
+            name
+            contributionsCollection(from: "{start_date}", to: "{end_date}") {{
+                contributionCalendar {{
+                    totalContributions
+                    weeks {{
+                        contributionDays {{
+                            contributionCount
+                            date
+                        }}
                     }}
                 }}
             }}
         }}
-    }}
-}}"""
-
-
-def get_most_active_dates():
+    }}"""
     response = requests.post(
         endpoints["github"],
         headers={"Authorization": f"Bearer {user_token}"},
@@ -33,8 +33,8 @@ def get_most_active_dates():
     return json.loads(response.text)["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
 
 
-def calculate_max():
-    weeks = get_most_active_dates()
+def calculate_max(user):
+    weeks = get_most_active_dates(user)
     max_day = 0
     max_day_date = ''
     max_week = 0
@@ -62,4 +62,4 @@ def calculate_max():
     print(f'Your max week value was {max_week}. This was week number {max_week_date}.')  # most number of commits made in a week, which week #
 
 
-calculate_max()
+calculate_max(user=username)

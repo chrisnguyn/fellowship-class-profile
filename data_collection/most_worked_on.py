@@ -75,7 +75,7 @@ def get_most_worked_on(user: str) -> Dict:
     return json.loads(r.text)
 
 
-response = get_most_worked_on(user="kbanc")
+response = get_most_worked_on(user=username)
 print(f"Top contributed to repos:",
       response["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"])
 
