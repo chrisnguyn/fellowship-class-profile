@@ -18,22 +18,23 @@ class User(db.Model):
 class UserInfo(db.Model):
     __tablename__ = "users_info"
 
-    user_id = db.Column(db.Integer, primary_key=True)
-    pod = db.Column(db.String(120), unique=True)
-    num_code_reviews = db.Column(db.Integer, unique=True)
-    num_issues_opened = db.Column(db.Integer, unique=True)
-    num_issues_contributed = db.Column(db.Integer, unique=True)
-    repo_changes = db.Column(db.String(120), unique=True)
-    collaborators = db.Column(db.String(120), unique=True)
-    num_followers = db.Column(db.Integer, unique=True)
-    num_following = db.Column(db.Integer, unique=True)
-    most_active_day = db.Column(db.String(120), unique=True)
-    most_active_week = db.Column(db.String(120), unique=True)
-    most_popular_pr = db.Column(db.String(120), unique=True)
-    top_repos = db.Column(db.String(120), unique=True)
-    num_prs = db.Column(db.Integer, unique=True)
-    num_commits = db.Column(db.Integer, unique=True)
-    num_repos = db.Column(db.Integer, unique=True)
+    github_username = db.Column(db.String(120), primary_key=True)
+    github_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True)
+    pod = db.Column(db.String(120))
+    num_code_reviews = db.Column(db.Integer)
+    num_issues_opened = db.Column(db.Integer)
+    num_issues_contributed = db.Column(db.Integer)
+    repo_changes = db.Column(db.Text)
+    collaborators = db.Column(db.Text)
+    num_followers = db.Column(db.Integer)
+    num_following = db.Column(db.Integer)
+    most_active_day = db.Column(db.String(120))
+    most_active_week = db.Column(db.String(120))
+    most_popular_pr = db.Column(db.Text)
+    top_repos = db.Column(db.Text)
+    num_prs = db.Column(db.Integer)
+    num_commits = db.Column(db.Integer)
+    num_repos = db.Column(db.Integer)
 
 
 class Repository(db.Model):
@@ -41,6 +42,6 @@ class Repository(db.Model):
 
     repo_id = db.Column(db.Integer, primary_key=True)
     repo_name = db.Column(db.String(120), unique=True)
-    repo_author = db.Column(db.String(100), unique=True)
-    primary_language = db.Column(db.String(100))
+    repo_author = db.Column(db.String(120))
+    primary_language = db.Column(db.String(120))
     is_fork = db.Column(db.Boolean)
