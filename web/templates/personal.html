@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/donutChart.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -20,7 +22,28 @@
         body.append("div")
             .attr("class", "header")
             .style("color", colors.black)
-            .html("Personal Stats")
+            .html("My MLH fellowship.")
+        Object.keys(personalSummary).forEach(key => {
+            let section = personalSummary[key]
+            renderDonutChart(body, section)
+        })
+
+        body.append("div")
+            .attr("class", "header")
+            .style("color", colors.black)
+            .html("My commits.")
+        body.append("div")
+            .attr("class", "subheader")
+            .style("color", colors.black)
+            .html("Commits over time")
+        body.append("div")
+            .attr("class", "header")
+            .style("color", colors.black)
+            .html("My pull requests.")
+        body.append("div")
+            .attr("class", "header")
+            .style("color", colors.black)
+            .html("My issues.")
     </script>
 </body>
 

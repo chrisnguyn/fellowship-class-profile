@@ -6,19 +6,19 @@
 
 .header {
     font-family: 'Noto Sans TC';
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 700;
     margin: 16px 0px 16px 0px;
 }
 
 .caption {
     font-family: 'Noto Sans TC';
-    font-size: 18px;
+    font-size: 12px;
 }
 
 .title {
     font-family: 'Noto Sans TC';
     font-weight: 700;
-    font-size: 72px;
+    font-size: 36px;
     text-align: center;
 }
