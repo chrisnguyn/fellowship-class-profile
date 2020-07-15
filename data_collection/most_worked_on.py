@@ -6,6 +6,17 @@ from general.user import username, user_token
 from typing import Dict
 from org_repo_stats import get_all_forked_repos_in_MLH
 
+"""
+File contains:
+- Top contributed to repos
+- Top repos part of MLH
+- Total number of PRs during Fellowship
+- Total number of repositories contributed to during the Fellowship
+- PR with the most discussion
+- Total # commits
+"""
+
+
 
 def get_repos_in_MLH_project_list(repositories):
     mlh_repo_names = [repo["name"] for repo in get_all_forked_repos_in_MLH()]
@@ -22,6 +33,9 @@ def get_most_worked_on(user: str) -> Dict:
     query {{
       user(login:"{user}"){{
         contributionsCollection(from: "{start_date}", to:"{end_date}" ) {{
+			contributionCalendar {{
+                totalContributions
+            }}
           totalRepositoriesWithContributedPullRequests
           totalPullRequestContributions
           totalCommitContributions
@@ -76,3 +90,5 @@ print("Total number of repositories contributed to during the Fellowship:",
 
 print("PR with the most discussion:",
       response["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"])
+
+print('In 12 weeks, you made {} commits!'.format(response["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"]))
