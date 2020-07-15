@@ -44,4 +44,5 @@ class Repository(db.Model):
     repo_name = db.Column(db.String(120), unique=True)
     repo_author = db.Column(db.String(120))
     primary_language = db.Column(db.String(120))
+    url = db.Column(db.String(120))
     is_fork = db.Column(db.Boolean)

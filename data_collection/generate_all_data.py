@@ -7,11 +7,11 @@ from issues import get_issues
 from most_active_day import calculate_max
 from most_worked_with import get_people_worked_with
 from most_worked_on import get_most_worked_on, get_repos_in_MLH_project_list
-from org_repo_stats import get_all_forked_repos_in_MLH, get_number_repos_in_MLH
+from org_repo_stats import get_all_original_repos_in_MLH, get_all_forked_repos_in_MLH
 from group_members_by_teams import get_members_by_teams
 
 from web.app import db
-from web.db_classes import UserInfo, RepoInfo
+from web.db_classes import UserInfo, Repository
 
 
 class User:
@@ -45,16 +45,22 @@ def store_mlh_user_data():
     for team_name, members in team_list.items():
         if "pod" or "mentors" or "staff" in team_name:
             for member in members:
-                create_user_info(member)
+                add_new_user(member)
     db.session.commit()
 
-def store_mlh_repo_data()
-    # get all the repos in MLH
-    # populate the repo table
-    pass
+
+def store_mlh_repo_data():
+    forked_repos = get_all_forked_repos_in_MLH()
+    original_repos = get_all_original_repos_in_MLH()
+    for repo in forked_repos:
+        add_new_repo(repo)
+    for repo in original_repos:
+        add_new_repo(repo)
+
+    db.session.commit()
 
 
-def create_user_info(user):
+def add_new_user(user):
     followers, following = get_followers_following(user)
     activity_stats = calculate_max(user)
     repo_stats = get_most_worked_on(user)
@@ -70,10 +76,29 @@ def create_user_info(user):
         most_active_day=json.dumps(activity_stats["max_day"]),
         most_active_week=json.dumps(activity_stats["max_week"]),
         user_id=json.dumps(repo_stats["data"]["user"]["id"]),
-        most_popular_pr=json.dumps(repo_stats["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"]),
-        top_repos=json.dumps(repo_stats["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]),
+        most_popular_pr=json.dumps(
+            repo_stats["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"]),
+        top_repos=json.dumps(
+            repo_stats["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]),
         num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
         num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
         num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
     )
     db.session.add(new_user)
+
+
+def add_new_repo(repo):
+    if repo["isFork"]:
+        author = repo["parent"]["owner"]["login"]
+    else:
+        author = repo["owner"]["login"]
+
+    new_repo = Repository(
+        repo_id=repo["id"],
+        repo_name=repo["name"],
+        repo_author=parent,
+        primary_language=repo["primaryLanguage"]["name"],
+        url=repo["url"],
+        is_fork=repo["isFork"],
+    )
+    db.session.add(new_repo)

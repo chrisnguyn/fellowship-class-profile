@@ -29,15 +29,56 @@ def get_all_forked_repos_in_MLH() -> Dict:
             repositories(first: {num_forked_repo}, isFork: true) {{
                 totalCount
                 nodes {{
+                    isFork
                     name
+                    id
                     parent{{
                         nameWithOwner
+                        owner{{
+                            login
+                        }}
                     }}
                     primaryLanguage{{
                         name
                     }}
                     homepageUrl
                     url
+                    owner{{
+                        login
+                    }}
+                }}
+            }}
+        }}
+    }}"""
+
+    r = requests.post(
+        endpoints["github"], headers={"Authorization": f"token {user_token}"}, json={"query": repo_info_query})
+    return json.loads(r.text)["data"]["organization"]["repositories"]["nodes"]
+
+def get_all_original_repos_in_MLH() -> Dict:
+    num_repo = get_number_repos_in_MLH(isFork="false")
+    repo_info_query = f"""
+    query {{ 
+        organization(login: "MLH-Fellowship"){{
+            repositories(first: {num_repo}, isFork: false) {{
+                totalCount
+                nodes {{
+                    isFork
+                    name
+                    id
+                    parent{{
+                        nameWithOwner
+                        owner{{
+                            login
+                        }}
+                    }}
+                    primaryLanguage{{
+                        name
+                    }}
+                    url
+                    owner{{
+                        login
+                    }}
                 }}
             }}
         }}
