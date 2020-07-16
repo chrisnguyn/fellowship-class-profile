@@ -78,6 +78,8 @@ function renderNavbar(body) {
                 return width * 0.25 - tabRectWidth / 2
             case pages.PERSONAL:
                 return width * 0.75 - tabRectWidth / 2
+            case pages.LOGIN:
+                return width * 0.75 - tabRectWidth / 2
             case _:
                 return 0
         }
@@ -130,7 +132,7 @@ function renderNavbar(body) {
             tabRect.transition()
                 .duration(tabRectTransition)
                 .ease(d3.easeLinear)
-                .attr("x", getTabPosition(pages.PERSONAL))
+                .attr("x", getTabPosition(pages.LOGIN))
         })
         .on("mouseout", function() {
             tabRect.transition()
@@ -139,6 +141,6 @@ function renderNavbar(body) {
                 .attr("x", getTabPosition())
         })
         .on("mousedown", function() {
-            window.location.pathname = pages.PERSONAL
+            window.location.pathname = pages.LOGIN
         })
 }

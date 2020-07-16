@@ -22,3 +22,10 @@
     font-size: 36px;
     text-align: center;
 }
+
+.button {
+    border-radius: 25px;
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+}
