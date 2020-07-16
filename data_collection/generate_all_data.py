@@ -39,34 +39,39 @@ def store_mlh_repo_data():
 
 
 def add_new_user(user, team_name):
-    followers, following = get_followers_following(user)
-    activity_stats = calculate_max(user)
-    repo_stats = get_most_worked_on(user)
-    total_contribution_graph = get_contribution_chart(user)
-    new_user = UserInfo(
-        pod=team_name,
-        github_username=user,
-        num_code_reviews=get_num_pr_reviews(user),
-        num_issues_opened=get_issues(user),
-        num_issues_contributed=get_num_issue_comments(user),
-        repo_changes=json.dumps(get_commit_stats(user)),
-        collaborators=json.dumps(get_people_worked_with(user)),
-        num_followers=followers,
-        num_following=following,
-        most_active_day=json.dumps(activity_stats["max_day"]),
-        most_active_week=json.dumps(activity_stats["max_week"]),
-        github_id=json.dumps(repo_stats["data"]["user"]["id"]),
-        most_popular_pr=json.dumps(
-            repo_stats["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"]),
-        top_repos=json.dumps(
-            repo_stats["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]),
-        num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
-        num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
-        num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
-        contribution_graph=json.dumps(total_contribution_graph),
-        last_updated=datetime.now(),
-    )
-    db.session.add(new_user)
+    try:
+        followers, following = get_followers_following(user)
+        activity_stats = calculate_max(user)
+        repo_stats = get_most_worked_on(user)
+        total_contribution_graph = get_contribution_chart(user)
+        new_user = UserInfo(
+            pod=team_name,
+            github_username=user,
+            num_code_reviews=get_num_pr_reviews(user),
+            num_issues_opened=get_issues(user),
+            num_issues_contributed=get_num_issue_comments(user),
+            repo_changes=json.dumps(get_commit_stats(user)),
+            collaborators=json.dumps(get_people_worked_with(user)),
+            num_followers=followers,
+            num_following=following,
+            most_active_day=json.dumps(activity_stats["max_day"]),
+            most_active_week=json.dumps(activity_stats["max_week"]),
+            github_id=json.dumps(repo_stats["data"]["user"]["id"]),
+            most_popular_pr=json.dumps(
+                repo_stats["data"]["user"]["contributionsCollection"]["popularPullRequestContribution"]),
+            top_repos=json.dumps(
+                repo_stats["data"]["user"]["contributionsCollection"]["pullRequestContributionsByRepository"]),
+            num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
+            num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
+            num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
+            contribution_graph=json.dumps(total_contribution_graph),
+            last_updated=datetime.now(),
+        )
+        print(f"Adding {user} of team {team_name}")
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception:
+        print(f"Something went wrong adding {user} of {team_name}.")
 
 
 def add_new_repo(repo):

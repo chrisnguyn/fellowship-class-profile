@@ -11,7 +11,6 @@ cli = FlaskGroup(app)
 
 @cli.command("create_db")
 def create_db():
-    db.drop_all()
     db.create_all()
     db.session.commit()
 
@@ -21,9 +20,10 @@ def collect_user_and_repo_data():
     store_mlh_user_data()
     store_mlh_repo_data()
 
+
 @cli.command("generate_global_stats")
 def generate_global_stats():
-    #note: needs to be run AFTER collect user_and_repo_data
+    # note: needs to be run AFTER collect user_and_repo_data
     create_new_global_stat()
 
 if __name__ == "__main__":
