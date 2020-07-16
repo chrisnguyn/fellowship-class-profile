@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/donutChart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <title>Glorious Geese</title>
+</head>
+
+<body id="personal-stats">
+    <script>
+        body = d3.select("body#personal-stats")
+            .style("background-color", colors.white)
+            .style("padding", "20px 24px 20px 24px")
+        renderNavbar(body)
+        body = body.append("div")
+            .style("padding", "0 10% 0 10%")
+        const loadData = async() => {
+            let contributions_data = await d3.json("{{ url_for('static',filename='dummy_data/contribution_graph.json') }}")
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My MLH fellowship.")
+            body.append("div")
+                .attr("class", "subheader")
+                .style("color", colors.black)
+                .html("My team")
+            Object.keys(personalSummary).forEach(key => {
+                let section = personalSummary[key]
+                renderDonutChart(body, section)
+            })
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My contributions.")
+            renderContributionOverTimeChart(body, contributions_data)
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My pull requests.")
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My issues.")
+
+        }
+        loadData()
+    </script>
+</body>
+
+</html>
