@@ -1,14 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Glorious Geese</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
+        <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <title>Glorious Geese</title>
+    </head>
 
-<body>
-    <script></script>
-    Login
+<body id=login>
+    <script>
+        body = d3.select("body#login")
+            .style("background-color", colors.white)
+            .style("padding", "20px 24px 20px 24px")
+
+        renderNavbar(body)
+
+        body = body.append("div")
+            .style("padding", "0 10% 0 10%")
+        
+        body.append("div")
+            .style("padding", "3% 0 0 0")
+            .style("text-align", "center")
+            .html("<img src=\"../static/icons/GitHub-Mark-120px-plus.png\" alt=\"GithubIcon\">")
+        body.append("div")
+            .attr("class", "header")
+            .style("color", colors.black)
+            .style("text-align", "center")
+            .html("My Fellowship.")
+        body.append("div")
+            .attr("class", "caption")
+            .style("color", colors.black)
+            .style("text-align", "center")
+            .html("Login with Github to view your personal statistics!")
+
+        let div = body.append("div")
+            .style("padding", "3% 0 0 0")
+            .style("display", "flex")
+            .style("align-items", "center")
+            .style("justify-content", "center")
+            .style("width", "100%")
+            
+        div.append("button")
+            .attr("class", "button")
+            .attr("type","rect")
+            .text("GitHub ➝")
+            .attr("id", "buttonCentre")
+            .attr("width", 200)
+            .attr("stroke", "none")
+            .style("text-align", "center")
+            .style("background-color", colors.yellow)
+            .style("font-family", "Noto Sans TC")
+            .on("click", function() {
+                window.location = "/login/github"
+            })
+
+    </script>
+
 </body>
 
 </html>
