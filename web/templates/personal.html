@@ -9,6 +9,7 @@
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/donutChart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -19,97 +20,42 @@
             .style("background-color", colors.white)
             .style("padding", "20px 24px 20px 24px")
         renderNavbar(body)
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("My MLH fellowship.")
-        body.append("div")
-            .attr("class", "subheader")
-            .style("color", colors.black)
-            .html("My team")
-        Object.keys(personalSummary).forEach(key => {
-            let section = personalSummary[key]
-            renderDonutChart(body, section)
-        })
+        body = body.append("div")
+            .style("padding", "0 10% 0 10%")
+        const loadData = async() => {
+            let contributions_data = await d3.json("{{ url_for('static',filename='dummy_data/contribution_graph.json') }}")
 
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("My contributions.")
-        body.append("div")
-            .attr("class", "subheader")
-            .style("color", colors.black)
-            .html("Contributions over time")
-        let div = body.append("div")
-            .style("display", "flex")
-            .style("align-items", "center")
-            .style("justify-content", "center")
-        let svg = div.append("svg")
-            .attr("height", 700)
-            .attr("width", 900)
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My MLH fellowship.")
+            body.append("div")
+                .attr("class", "subheader")
+                .style("color", colors.black)
+                .html("My team")
+            Object.keys(personalSummary).forEach(key => {
+                let section = personalSummary[key]
+                renderDonutChart(body, section)
+            })
 
-        let height = svg.attr("height")
-        let width = svg.attr("width")
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My contributions.")
+            renderContributionOverTimeChart(body, contributions_data)
 
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My pull requests.")
 
-        let chartWidth = width - 200
-        let horizontalPadding = 24
-        let tabHeight = 24
-        let chartY = width / 2
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("My issues.")
 
-        svg.append("text")
-            .attr("class", "caption")
-            .attr("text-anchor", "end")
-            .attr("alignment-baseline", "middle")
-            .attr("fill", colors.black)
-            .attr("x", width / 2 - chartWidth / 2 - horizontalPadding)
-            .attr("y", height / 2)
-            .text("June 01")
-
-        svg.append("text")
-            .attr("class", "caption")
-            .attr("text-anchor", "start")
-            .attr("alignment-baseline", "middle")
-            .attr("fill", colors.black)
-            .attr("x", width / 2 + chartWidth / 2 + horizontalPadding)
-            .attr("y", height / 2)
-            .text("Aug 24")
-
-        svg.append("line")
-            .attr("x1", width / 2 - chartWidth / 2)
-            .attr("x2", width / 2 + chartWidth / 2)
-            .attr("y1", height / 2)
-            .attr("y2", height / 2)
-            .attr("stroke", colors.black)
-            .attr("stroke-width", 2)
-
-        svg.append("line")
-            .attr("x1", width / 2 - chartWidth / 2)
-            .attr("x2", width / 2 - chartWidth / 2)
-            .attr("y1", height / 2 - tabHeight / 2)
-            .attr("y2", height / 2 + tabHeight / 2)
-            .attr("stroke", colors.black)
-            .attr("stroke-width", 2)
-
-        svg.append("line")
-            .attr("x1", width / 2 + chartWidth / 2)
-            .attr("x2", width / 2 + chartWidth / 2)
-            .attr("y1", height / 2 - tabHeight / 2)
-            .attr("y2", height / 2 + tabHeight / 2)
-            .attr("stroke", colors.black)
-            .attr("stroke-width", 2)
-
-
-
-
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("My pull requests.")
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("My issues.")
+        }
+        loadData()
     </script>
 </body>
 
