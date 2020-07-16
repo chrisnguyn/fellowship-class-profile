@@ -21,7 +21,7 @@ def store_mlh_user_data():
         if "pod" or "mentors" or "staff" in team_name:
             for member in members:
                 if db.session.query(UserInfo).filter_by(github_username=member).count() < 1:
-                    add_new_user(member)
+                    add_new_user(member, team_name)
     db.session.commit()
 
 
@@ -61,7 +61,7 @@ def add_new_user(user, team_name):
         num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
         num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
         num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
-        contribution_graph=total_contribution_graph
+        contribution_graph=json.dumps(total_contribution_graph)
     )
     db.session.add(new_user)
 
