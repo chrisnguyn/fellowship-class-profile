@@ -1,4 +1,4 @@
-from web.app import db
+from web.factory import db
 
 
 class User(db.Model):

@@ -20,6 +20,8 @@ services:
       - POSTGRES_USER=coderman
       - POSTGRES_PASSWORD=codermanpassword123
       - POSTGRES_DB=fellowship-class-profile
+    ports:
+      - "5432:5432"
 
 volumes:
   postgres_data:

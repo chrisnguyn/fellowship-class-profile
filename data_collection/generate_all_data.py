@@ -10,8 +10,8 @@ from data_collection.most_worked_on import get_most_worked_on, get_repos_in_MLH_
 from data_collection.org_repo_stats import get_all_original_repos_in_MLH, get_all_forked_repos_in_MLH
 from data_collection.group_members_by_teams import get_members_by_teams
 
-from web.app import db
-from web.db_classes import UserInfo, Repository
+from web.factory import db
+from web.models import UserInfo, Repository
 
 
 def store_mlh_user_data():

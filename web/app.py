@@ -1,42 +1,37 @@
-import os
-
 import requests
 
-from flask import Flask, jsonify, render_template, request, session, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify, render_template, request, session, redirect, url_for, Blueprint
 
+from web.factory import db
 from web.github import GitHubExtension
+from web.models import User
 
-app = Flask(__name__, template_folder='./templates')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SECRET_KEY'] = 'this-really-needs-to-be-changed'
+bp = Blueprint('app', __name__)
 
-db = SQLAlchemy(app)
 github_extension = GitHubExtension()
 
 
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template('index.html', email=session.get('github_user_email'))
 
 
-@app.route('/login')
+@bp.route('/login')
 def login():
     return render_template('login.html')
 
 
-@app.route('/personal')
+@bp.route('/personal')
 def personal():
     return render_template('personal.html')
 
 
-@app.route('/status_check')
+@bp.route('/status_check')
 def status_check():
     return jsonify({"success": "up"})
 
 
-@app.route('/callback/github')
+@bp.route('/callback/github')
 def callback():
     response = github_extension.get_access_token_with_auth_code(
         request.args.get('code'))
@@ -67,13 +62,13 @@ def callback():
     return 'Internal Server Error', 500
 
 
-@app.route('/login/github')
+@bp.route('/login/github')
 def login_github():
     return redirect('https://github.com/login/oauth/authorize?client_id'
                     '=fc7c0f9b52387b87d52d&scope=repo user:email')
 
 
-@app.route('/logout')
+@bp.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))

@@ -1,6 +1,7 @@
 from flask.cli import FlaskGroup
 
-from web.app import app, db
+from web import app
+from web.factory import db
 from data_collection.generate_all_data import store_mlh_repo_data, store_mlh_user_data
 
 
