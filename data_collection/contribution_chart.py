@@ -1,12 +1,12 @@
-from general.user import username, user_token
-from general.static import endpoints
+from data_collection.general.user import username, user_token
+from data_collection.general.static import endpoints, start_date, end_date
 import json
 import requests
 
 def get_contribution_chart(user):
     chart_query = f"""query {{
         user(login: "{user}") {{
-            contributionsCollection(from: "2020-06-01T00:00:00Z", to: "2020-08-24T19:30:46Z") {{
+            contributionsCollection(from: "{start_date}", to: "{end_date}") {{
                 contributionCalendar {{
                     totalContributions
                     weeks {{
@@ -27,9 +27,10 @@ def get_contribution_chart(user):
         json={"query": chart_query}
     )
 
-    return json.dumps(response.json())
+    data = json.loads(response.text)
+    return data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
 
 
 if __name__ == "__main__":
-    get_contribution_chart(username)
-    # print(get_contribution_chart(username))
+    # get_contribution_chart(username)
+    print(get_contribution_chart(username))
