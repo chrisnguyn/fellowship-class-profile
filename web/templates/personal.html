@@ -26,6 +26,8 @@
         const loadData = async() => {
             let contributions_data = await d3.json("{{ url_for('static',filename='dummy_data/contribution_graph.json') }}")
             let team_data = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
+                // let data = await d3.json("https://fellowship-class-profile.herokuapp.com/user_stats?username=kx-chen")
+                // console.log(data)
 
             let username = "YKo20010" // TODO: Replace dummy data.
 

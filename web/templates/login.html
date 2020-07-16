@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
-        <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <title>Glorious Geese</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/personal.js') }}"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <title>Glorious Geese</title>
+</head>
 
 <body id=login>
     <script>
@@ -21,12 +21,30 @@
         renderNavbar(body)
 
         body = body.append("div")
-            .style("padding", "0 10% 0 10%")
-        
-        body.append("div")
+            .style("position", "absolute")
+            .style("top", "50%")
+            .style("left", "50%")
+            .style("-ms-transform", "translate(-50%, -50%)")
+            .style("transform", "translate(-50%, -50%)")
+            .style("margin", 0)
+
+        let imageSize = 140
+        let imageSvg = body.append("div")
             .style("padding", "3% 0 0 0")
-            .style("text-align", "center")
-            .html("<img src=\"../static/icons/GitHub-Mark-120px-plus.png\" alt=\"GithubIcon\">")
+            .style("display", "flex")
+            .style("align-items", "center")
+            .style("justify-content", "center")
+            .style("width", "100%")
+            .append("svg")
+            .attr("height", imageSize)
+            .attr("width", imageSize)
+        imageSvg.append("image")
+            .attr("href", "../static/icons/github.svg")
+            .attr("height", imageSize)
+            .attr("width", imageSize)
+            .attr("x", 0)
+            .attr("y", 0)
+
         body.append("div")
             .attr("class", "header")
             .style("color", colors.black)
@@ -39,26 +57,49 @@
             .html("Login with Github to view your personal statistics!")
 
         let div = body.append("div")
-            .style("padding", "3% 0 0 0")
+            .style("padding", "40px 0 0 0")
             .style("display", "flex")
             .style("align-items", "center")
             .style("justify-content", "center")
             .style("width", "100%")
-            
-        div.append("button")
-            .attr("class", "button")
-            .attr("type","rect")
+
+        let svg = div.append("svg")
+            .attr("height", 40)
+            .attr("width", 140)
+
+        let height = svg.attr("height")
+        let width = svg.attr("width")
+
+        svg.append("rect")
+            .attr("height", height)
+            .attr("width", width)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("rx", 20)
+            .attr("fill", colors.yellow)
+
+        svg.append("text")
+            .attr("font-family", "Space Mono")
+            .attr("font-size", 14)
+            .attr("text-anchor", "middle")
+            .attr("alignment-baseline", "middle")
+            .attr("fill", colors.white)
+            .attr("x", width / 2)
+            .attr("y", height / 2)
             .text("GitHub ➝")
+
+        svg.append("rect")
             .attr("id", "buttonCentre")
-            .attr("width", 200)
-            .attr("stroke", "none")
-            .style("text-align", "center")
-            .style("background-color", colors.yellow)
-            .style("font-family", "Noto Sans TC")
+            .attr("height", height)
+            .attr("width", width)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("rx", 20)
+            .attr("opacity", 0)
+            .attr("cursor", "pointer")
             .on("click", function() {
                 window.location = "/login/github"
             })
-
     </script>
 
 </body>
