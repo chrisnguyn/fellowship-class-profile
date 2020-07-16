@@ -12,6 +12,7 @@ Docker takes care of the setup for you! `docker-compose` will provision the data
         DATABASE_URL=postgresql://coderman:codermanpassword123@postgres:5432/fellowship-class-profile
         GITHUB_CLIENT_ID=fc7c0f9b52387b87d52d
         GITHUB_CLIENT_SECRET=REPLACE_ME
+        GITHUB_API_TOKEN=REPLACE_ME_WITH_YOUR_TOKEN
         
 3. Use `docker-compose`: 
 
