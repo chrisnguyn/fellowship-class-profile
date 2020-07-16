@@ -73,6 +73,7 @@ def create_new_global_stat():
         num_lines_code_deleted_per_repo=json.dumps(deleted),
         num_files_changed_per_repo=json.dumps(changed),
         last_updated=datetime.now(),
+
     )
     db.session.add(stats)
     db.session.commit()

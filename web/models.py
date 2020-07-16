@@ -72,3 +72,4 @@ class GlobalStats(db.Model):
     num_files_changed_per_repo = db.Column(db.Text)
     num_commits_per_repo = db.Column(db.Text)
     last_updated = db.Column(db.DateTime)
+
