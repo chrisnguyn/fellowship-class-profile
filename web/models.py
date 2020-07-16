@@ -1,4 +1,4 @@
-from web.app import db
+from web.factory import db
 
 
 class User(db.Model):
@@ -35,6 +35,7 @@ class UserInfo(db.Model):
     num_prs = db.Column(db.Integer)
     num_commits = db.Column(db.Integer)
     num_repos = db.Column(db.Integer)
+    contribution_graph = db.Column(db.Text)
 
 
 class Repository(db.Model):

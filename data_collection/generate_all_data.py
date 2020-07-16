@@ -1,17 +1,18 @@
 import json
 
+from data_collection.contribution_chart import get_contribution_chart
 from data_collection.followers_following import get_followers_following
 from data_collection.code_review_by_user import get_num_issue_comments, get_num_pr_reviews
 from data_collection.commit_stats import get_commit_stats
 from data_collection.issues import get_issues
 from data_collection.most_active_day import calculate_max
 from data_collection.most_worked_with import get_people_worked_with
-from data_collection.most_worked_on import get_most_worked_on, get_repos_in_MLH_project_list
+from data_collection.most_worked_on import get_most_worked_on
 from data_collection.org_repo_stats import get_all_original_repos_in_MLH, get_all_forked_repos_in_MLH
 from data_collection.group_members_by_teams import get_members_by_teams
 
-from web.app import db
-from web.db_classes import UserInfo, Repository
+from web.factory import db
+from web.models import UserInfo, Repository
 
 
 def store_mlh_user_data():
@@ -19,7 +20,8 @@ def store_mlh_user_data():
     for team_name, members in team_list.items():
         if "pod" or "mentors" or "staff" in team_name:
             for member in members:
-                add_new_user(member)
+                if db.session.query(UserInfo).filter_by(github_username=member).count() < 1:
+                    add_new_user(member, team_name)
     db.session.commit()
 
 
@@ -34,11 +36,13 @@ def store_mlh_repo_data():
     db.session.commit()
 
 
-def add_new_user(user):
+def add_new_user(user, team_name):
     followers, following = get_followers_following(user)
     activity_stats = calculate_max(user)
     repo_stats = get_most_worked_on(user)
+    total_contribution_graph = get_contribution_chart(user)
     new_user = UserInfo(
+        pod=team_name,
         github_username=user,
         num_code_reviews=get_num_pr_reviews(user),
         num_issues_opened=get_issues(user),
@@ -57,27 +61,29 @@ def add_new_user(user):
         num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
         num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
         num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
+        contribution_graph=json.dumps(total_contribution_graph)
     )
     db.session.add(new_user)
 
 
 def add_new_repo(repo):
-    if repo["isFork"]:
-        author = repo["parent"]["owner"]["login"]
-    else:
-        author = repo["owner"]["login"]
-    
-    if repo.get("primaryLanguage", False):
-        lang = repo["primaryLanguage"]["name"]
-    else:
-        lang = "None"
+    if db.session.query(Repository).filter_by(repo_id=repo["id"]).count() < 1:
+        if repo["isFork"]:
+            author = repo["parent"]["owner"]["login"]
+        else:
+            author = repo["owner"]["login"]
+        
+        if repo.get("primaryLanguage", False):
+            lang = repo["primaryLanguage"]["name"]
+        else:
+            lang = "None"
 
-    new_repo = Repository(
-        repo_id=repo["id"],
-        repo_name=repo["name"],
-        repo_author=author,
-        primary_language = lang, 
-        url=repo["url"],
-        is_fork=repo["isFork"],
-    )
-    db.session.add(new_repo)
+        new_repo = Repository(
+            repo_id=repo["id"],
+            repo_name=repo["name"],
+            repo_author=author,
+            primary_language = lang, 
+            url=repo["url"],
+            is_fork=repo["isFork"],
+        )
+        db.session.add(new_repo)
