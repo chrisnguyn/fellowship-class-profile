@@ -3,6 +3,7 @@ from data_collection.general.static import endpoints, start_date, end_date
 import json
 import requests
 
+
 def get_contribution_chart(user):
     chart_query = f"""query {{
         user(login: "{user}") {{

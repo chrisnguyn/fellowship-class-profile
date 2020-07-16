@@ -40,6 +40,7 @@ def get_user_stats():
                 "num_prs": user.num_prs,
                 "num_commits": user.num_commits,
                 "num_repos": user.num_repos,
+                "contribution_graph": json.loads(user.contribution_graph),
             })
         else:
             return jsonify({"error": "User not found"})
