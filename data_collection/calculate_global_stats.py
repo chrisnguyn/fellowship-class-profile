@@ -31,8 +31,22 @@ def calculate_per_repo_stats():
     return commits_per_repo, lines_added_per_repo, lines_deleted_per_repo, files_changed_per_repo
 
 def aggregate_per_day_contributions():
-    users_daily_contributions = db.session.query(
-        UserInfo).select(columns="repo_changes")
+    aggregate_contributions = {"totalContributions": 0,"days": {}}
+    users_daily_contributions = db.session.query(UserInfo.contribution_graph).all()
+    for user_daily_contributions in users_daily_contributions:
+        user_daily_contributions = json.loads(user_daily_contributions[0])
+        aggregate_contributions["totalContributions"] += user_daily_contributions["totalContributions"]
+        for i, week in enumerate(user_daily_contributions["weeks"]):
+            for day in week["contributionDays"]:
+                if day["date"] not in aggregate_contributions["days"]:
+                    aggregate_contributions["days"][day["date"]] = {
+                        "contributionCount": day["contributionCount"],
+                        "week": i,
+                        "weekday": day["weekday"]
+                    }
+                else: 
+                    aggregate_contributions["days"][day["date"]]["contributionCount"]+=day["contributionCount"]
+    return aggregate_contributions
 
 def create_new_global_stat():
     commits, added, deleted, changed = calculate_per_repo_stats()
@@ -47,7 +61,7 @@ def create_new_global_stat():
         num_members=db.session.query(UserInfo).count(),
         num_pods=15,
         num_commits_per_repo=json.dumps(commits),
-        # num_contributions_by_day=,
+        num_contributions_by_day=json.dumps(aggregate_per_day_contributions()),
         num_prs=db.session.query(func.sum(UserInfo.num_prs)),
         num_issues_contributed=db.session.query(func.sum(UserInfo.num_issues_contributed)),
         num_issues_opened=db.session.query(func.sum(UserInfo.num_issues_opened)),
