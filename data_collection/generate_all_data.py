@@ -1,5 +1,6 @@
 import json
 
+from data_collection.contribution_chart import get_contribution_chart
 from data_collection.followers_following import get_followers_following
 from data_collection.code_review_by_user import get_num_issue_comments, get_num_pr_reviews
 from data_collection.commit_stats import get_commit_stats
@@ -38,6 +39,7 @@ def add_new_user(user, team_name):
     followers, following = get_followers_following(user)
     activity_stats = calculate_max(user)
     repo_stats = get_most_worked_on(user)
+    total_contribution_graph = get_contribution_chart(user)
     new_user = UserInfo(
         pod=team_name,
         github_username=user,
@@ -58,6 +60,7 @@ def add_new_user(user, team_name):
         num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
         num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
         num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
+        contribution_graph=total_contribution_graph
     )
     db.session.add(new_user)
 
