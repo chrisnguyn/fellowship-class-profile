@@ -1,10 +1,10 @@
 import requests
 
-from flask import jsonify, render_template, request, session, redirect, url_for, Blueprint
+from flask import jsonify, render_template, request, session, redirect, url_for, Blueprint, json
 
 from web.factory import db
 from web.github import GitHubExtension
-from web.models import User
+from web.models import User, UserInfo
 
 bp = Blueprint('app', __name__)
 
@@ -14,6 +14,37 @@ github_extension = GitHubExtension()
 @bp.route('/')
 def index():
     return render_template('index.html', email=session.get('github_user_email'))
+
+
+@bp.route('/user_stats')
+def get_user_stats():
+    username = request.args.get('username')
+    if username:
+        user = UserInfo.query.filter_by(github_username=username).first()
+        if user:
+            return jsonify({
+                "github_username": user.github_username,
+                "github_id": user.github_id,
+                "pod": user.pod,
+                "num_code_reviews": user.num_code_reviews,
+                "num_issues_opened": user.num_issues_opened,
+                "num_issues_contributed": user.num_issues_contributed,
+                "repo_changes": json.loads(user.repo_changes),
+                "collaborators": json.loads(user.collaborators),
+                "num_followers": user.num_followers,
+                "num_following": user.num_following,
+                "most_active_day": json.loads(user.most_active_day),
+                "most_active_week": json.loads(user.most_active_week),
+                "most_popular_pr": json.loads(user.most_popular_pr),
+                "top_repos": json.loads(user.top_repos),
+                "num_prs": user.num_prs,
+                "num_commits": user.num_commits,
+                "num_repos": user.num_repos,
+            })
+        else:
+            return jsonify({"error": "User not found"})
+
+    return jsonify({"error": "Username not specified"}), 400
 
 
 @bp.route('/login')
