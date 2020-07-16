@@ -47,3 +47,26 @@ class Repository(db.Model):
     primary_language = db.Column(db.String(120))
     url = db.Column(db.String(120))
     is_fork = db.Column(db.Boolean)
+
+
+class GlobalStats(db.Model):
+    __tablename__ = "global_stats"
+
+    id = db.Column(db.Integer, primary_key=True)
+    repo_lang_stats = db.Column(db.Text)
+    num_repos = db.Column(db.Integer)
+    num_standups = db.Column(db.Integer)
+    num_countries = db.Column(db.Integer)
+    num_timezone = db.Column(db.Integer)
+    num_members = db.Column(db.Integer)
+    num_pods = db.Column(db.Integer)
+    num_contributions_by_day = db.Column(db.Text)
+    num_prs = db.Column(db.Integer)
+    num_issues_opened = db.Column(db.Integer)
+    num_issues_contributed = db.Column(db.Integer)
+    num_commits = db.Column(db.Integer)
+    num_code_reviews = db.Column(db.Text)
+    num_lines_code_added_per_repo = db.Column(db.Text)
+    num_lines_code_deleted_per_repo = db.Column(db.Text)
+    num_files_changed_per_repo = db.Column(db.Text)
+    num_commits_per_repo = db.Column(db.Text)
