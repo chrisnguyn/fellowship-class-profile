@@ -27,60 +27,16 @@ function renderContributionOverTimeChart(body, contributions_data) {
         .style("align-items", "center")
         .style("justify-content", "center")
     let svg = div.append("svg")
-        .attr("height", 700)
+        .attr("height", 500)
         .attr("width", 900)
 
     let height = svg.attr("height")
     let width = svg.attr("width")
 
     let chartWidth = width - 200
-    let chartHeight = height - 400
     let horizontalPadding = 24
     let tabHeight = 24
-    let chartY = height / 2
     let rectWidth = chartWidth / contributions.length
-
-    svg.append("text")
-        .attr("class", "caption")
-        .attr("text-anchor", "end")
-        .attr("alignment-baseline", "middle")
-        .attr("fill", colors.black)
-        .attr("x", width / 2 - chartWidth / 2 - horizontalPadding)
-        .attr("y", chartY)
-        .text("June 01")
-
-    svg.append("text")
-        .attr("class", "caption")
-        .attr("text-anchor", "start")
-        .attr("alignment-baseline", "middle")
-        .attr("fill", colors.black)
-        .attr("x", width / 2 + chartWidth / 2 + horizontalPadding)
-        .attr("y", chartY)
-        .text("Aug 24")
-
-    svg.append("line")
-        .attr("x1", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
-        .attr("x2", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
-        .attr("y1", chartY)
-        .attr("y2", chartY)
-        .attr("stroke", colors.black)
-        .attr("stroke-width", 2)
-
-    svg.append("line")
-        .attr("x1", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
-        .attr("x2", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
-        .attr("y1", chartY - tabHeight / 2)
-        .attr("y2", chartY + tabHeight / 2)
-        .attr("stroke", colors.black)
-        .attr("stroke-width", 2)
-
-    svg.append("line")
-        .attr("x1", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
-        .attr("x2", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
-        .attr("y1", chartY - tabHeight / 2)
-        .attr("y2", chartY + tabHeight / 2)
-        .attr("stroke", colors.black)
-        .attr("stroke-width", 2)
 
     let averageContributionPerDay = contributions.reduce((acc, d) => {
         return acc + d.count
@@ -92,7 +48,6 @@ function renderContributionOverTimeChart(body, contributions_data) {
     let minContributions = d3.min(contributions, d => {
         return d.count
     })
-    let halfRange = Math.max(maxContributions - averageContributionPerDay, averageContributionPerDay - minContributions)
 
     // console.log(averageContributionPerDay)
     // console.log(maxContributions)
@@ -104,8 +59,50 @@ function renderContributionOverTimeChart(body, contributions_data) {
         .range([width / 2 - chartWidth / 2, width / 2 + chartWidth / 2])
 
     let contributionYScale = d3.scaleLinear()
-        .domain([averageContributionPerDay - halfRange, averageContributionPerDay + halfRange])
-        .range([chartY + chartHeight / 2, chartY - chartHeight / 2])
+        .domain([minContributions, maxContributions])
+        .range([height - 40, 200])
+
+    svg.append("text")
+        .attr("class", "caption")
+        .attr("text-anchor", "end")
+        .attr("alignment-baseline", "middle")
+        .attr("fill", colors.black)
+        .attr("x", width / 2 - chartWidth / 2 - horizontalPadding)
+        .attr("y", contributionYScale(averageContributionPerDay))
+        .text("June 01")
+
+    svg.append("text")
+        .attr("class", "caption")
+        .attr("text-anchor", "start")
+        .attr("alignment-baseline", "middle")
+        .attr("fill", colors.black)
+        .attr("x", width / 2 + chartWidth / 2 + horizontalPadding)
+        .attr("y", contributionYScale(averageContributionPerDay))
+        .text("Aug 24")
+
+    svg.append("line")
+        .attr("x1", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
+        .attr("x2", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
+        .attr("y1", contributionYScale(averageContributionPerDay))
+        .attr("y2", contributionYScale(averageContributionPerDay))
+        .attr("stroke", colors.black)
+        .attr("stroke-width", 2)
+
+    svg.append("line")
+        .attr("x1", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
+        .attr("x2", width / 2 - chartWidth / 2 - rectWidth / 2 - 1)
+        .attr("y1", contributionYScale(averageContributionPerDay) - tabHeight / 2)
+        .attr("y2", contributionYScale(averageContributionPerDay) + tabHeight / 2)
+        .attr("stroke", colors.black)
+        .attr("stroke-width", 2)
+
+    svg.append("line")
+        .attr("x1", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
+        .attr("x2", width / 2 + chartWidth / 2 + rectWidth / 2 + 1)
+        .attr("y1", contributionYScale(averageContributionPerDay) - tabHeight / 2)
+        .attr("y2", contributionYScale(averageContributionPerDay) + tabHeight / 2)
+        .attr("stroke", colors.black)
+        .attr("stroke-width", 2)
 
     let dateLabel = svg.append("text")
         .attr("font-family", "Space Mono")
@@ -135,7 +132,8 @@ function renderContributionOverTimeChart(body, contributions_data) {
     function showLabels(d, i) {
         let dateTime = dateTimeParser(d.date)
         console.log(dateTime)
-        let labelY = chartY + (chartHeight / 2 + rectWidth + 12) * (d.count > averageContributionPerDay ? -1 : 1)
+        let labelY = contributionYScale(d.count > averageContributionPerDay ? maxContributions : minContributions) +
+            (rectWidth + 12) * (d.count > averageContributionPerDay ? -1 : 1)
         dateLabel.attr("visibility", "visible")
             .attr("x", dateXScale(i) - 12)
             .attr("y", labelY)
