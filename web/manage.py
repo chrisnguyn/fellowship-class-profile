@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
-from web.app import app
-from web.models import db
+from web import app
+from web.factory import db
 from data_collection.generate_all_data import store_mlh_repo_data, store_mlh_user_data
 
 
@@ -17,6 +17,12 @@ def create_db():
 
 @cli.command("collect_user_and_repo_data")
 def collect_user_and_repo_data():
+    store_mlh_user_data()
+    store_mlh_repo_data()
+
+
+@cli.command("collect_user_and_repo_data")
+def create_db():
     store_mlh_user_data()
     store_mlh_repo_data()
 
