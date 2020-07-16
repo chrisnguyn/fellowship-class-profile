@@ -70,6 +70,7 @@ function renderNavbar(body) {
     }
 
     let tabRectWidth = 130
+    let tabRectTransition = 50
 
     function getTabPosition(pathname = window.location.pathname) {
         switch (pathname) {
@@ -101,10 +102,15 @@ function renderNavbar(body) {
         .attr("cursor", "pointer")
         .text("Class of 2020")
         .on("mouseover", function() {
-            tabRect.attr("x", getTabPosition(pages.CLASS_2020))
+            tabRect.transition()
+                .duration(tabRectTransition)
+                .ease(d3.easeLinear)
+                .attr("x", getTabPosition(pages.CLASS_2020))
         })
         .on("mouseout", function() {
-            tabRect.attr("x", getTabPosition())
+            tabRect.transition()
+                .duration(tabRectTransition)
+                .ease(d3.easeLinear).attr("x", getTabPosition())
         })
         .on("mousedown", function() {
             window.location.pathname = pages.CLASS_2020
@@ -121,10 +127,16 @@ function renderNavbar(body) {
         .attr("cursor", "pointer")
         .text("My Fellowship")
         .on("mouseover", function() {
-            tabRect.attr("x", getTabPosition(pages.PERSONAL))
+            tabRect.transition()
+                .duration(tabRectTransition)
+                .ease(d3.easeLinear)
+                .attr("x", getTabPosition(pages.PERSONAL))
         })
         .on("mouseout", function() {
-            tabRect.attr("x", getTabPosition())
+            tabRect.transition()
+                .duration(tabRectTransition)
+                .ease(d3.easeLinear)
+                .attr("x", getTabPosition())
         })
         .on("mousedown", function() {
             window.location.pathname = pages.PERSONAL

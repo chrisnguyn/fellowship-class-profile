@@ -13,6 +13,10 @@ def create_db():
     db.drop_all()
     db.create_all()
     db.session.commit()
+
+
+@cli.command("collect_user_and_repo_data")
+def collect_user_and_repo_data():
     store_mlh_user_data()
     store_mlh_repo_data()
 

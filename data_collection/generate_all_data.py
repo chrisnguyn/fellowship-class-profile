@@ -6,7 +6,7 @@ from data_collection.commit_stats import get_commit_stats
 from data_collection.issues import get_issues
 from data_collection.most_active_day import calculate_max
 from data_collection.most_worked_with import get_people_worked_with
-from data_collection.most_worked_on import get_most_worked_on, get_repos_in_MLH_project_list
+from data_collection.most_worked_on import get_most_worked_on
 from data_collection.org_repo_stats import get_all_original_repos_in_MLH, get_all_forked_repos_in_MLH
 from data_collection.group_members_by_teams import get_members_by_teams
 
@@ -19,7 +19,7 @@ def store_mlh_user_data():
     for team_name, members in team_list.items():
         if "pod" or "mentors" or "staff" in team_name:
             for member in members:
-                add_new_user(member)
+                add_new_user(member, team_name)
     db.session.commit()
 
 
@@ -34,11 +34,12 @@ def store_mlh_repo_data():
     db.session.commit()
 
 
-def add_new_user(user):
+def add_new_user(user, team_name):
     followers, following = get_followers_following(user)
     activity_stats = calculate_max(user)
     repo_stats = get_most_worked_on(user)
     new_user = UserInfo(
+        pod=team_name,
         github_username=user,
         num_code_reviews=get_num_pr_reviews(user),
         num_issues_opened=get_issues(user),

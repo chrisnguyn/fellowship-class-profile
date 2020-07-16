@@ -1,7 +1,7 @@
 import json
 import requests
 
-from data_collection.general.static import count, end_date, endpoints, start_date
+from data_collection.general.static import endpoints
 from data_collection.general.user import username, user_token
 from typing import Dict, List
 
