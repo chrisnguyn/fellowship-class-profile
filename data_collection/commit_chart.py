@@ -1,5 +1,5 @@
-from general.user import username, user_token
-from general.static import end_date, endpoints, start_date
+from data_collection.general.user import user_token
+from data_collection.general.static import endpoints
 import json
 import requests
 
