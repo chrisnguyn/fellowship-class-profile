@@ -1,5 +1,7 @@
 import json
 
+from datetime import datetime
+
 from data_collection.contribution_chart import get_contribution_chart
 from data_collection.followers_following import get_followers_following
 from data_collection.code_review_by_user import get_num_issue_comments, get_num_pr_reviews
@@ -61,7 +63,8 @@ def add_new_user(user, team_name):
         num_prs=repo_stats["data"]["user"]["contributionsCollection"]["totalPullRequestContributions"],
         num_commits=repo_stats["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"],
         num_repos=repo_stats["data"]["user"]["contributionsCollection"]["totalRepositoriesWithContributedPullRequests"],
-        contribution_graph=json.dumps(total_contribution_graph)
+        contribution_graph=json.dumps(total_contribution_graph),
+        last_updated=datetime.now(),
     )
     db.session.add(new_user)
 

@@ -36,6 +36,7 @@ class UserInfo(db.Model):
     num_commits = db.Column(db.Integer)
     num_repos = db.Column(db.Integer)
     contribution_graph = db.Column(db.Text)
+    last_updated = db.Column(db.DateTime)
 
 
 class Repository(db.Model):
@@ -70,3 +71,5 @@ class GlobalStats(db.Model):
     num_lines_code_deleted_per_repo = db.Column(db.Text)
     num_files_changed_per_repo = db.Column(db.Text)
     num_commits_per_repo = db.Column(db.Text)
+    last_updated = db.Column(db.DateTime)
+

@@ -1,4 +1,6 @@
 import os
 
-username = "YKo20010"
+
+username = "YOUR USERNAME HERE"
 user_token = os.environ["GITHUB_API_TOKEN"]
+

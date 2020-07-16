@@ -1,4 +1,6 @@
 import json
+
+from datetime import datetime
 from sqlalchemy.sql import select, func
 
 from data_collection.org_repo_stats import get_top_languages, get_all_forked_repos_in_MLH
@@ -70,6 +72,8 @@ def create_new_global_stat():
         num_lines_code_added_per_repo=json.dumps(added),
         num_lines_code_deleted_per_repo=json.dumps(deleted),
         num_files_changed_per_repo=json.dumps(changed),
+        last_updated=datetime.now(),
+
     )
     db.session.add(stats)
     db.session.commit()
