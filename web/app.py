@@ -4,7 +4,7 @@ from flask import jsonify, render_template, request, session, redirect, url_for,
 
 from web.factory import db
 from web.github import GitHubExtension
-from web.models import User, UserInfo
+from web.models import User, UserInfo, GlobalStats
 
 bp = Blueprint('app', __name__)
 
@@ -47,6 +47,31 @@ def get_user_stats():
 
     return jsonify({"error": "Username not specified"}), 400
 
+@bp.route('/global_stats')
+def get_global_stats():
+    stats = GlobalStats.query.first()
+    if stats:
+        return jsonify({
+            "repo_lang_stats": json.loads(stats.repo_lang_stats),
+            "num_repos": stats.num_repos,
+            "num_standups": stats.num_standups,
+            "num_countries": stats.num_countries,
+            "num_timezone": stats.num_timezone,
+            "num_members": stats.num_members,
+            "num_pods": stats.num_pods,
+            "num_contributions_by_day": json.loads(stats.num_contributions_by_day),
+            "num_prs": stats.num_prs,
+            "num_issues_opened": stats.num_issues_opened,
+            "num_issues_contributed": stats.num_issues_contributed,
+            "num_commits": stats.num_commits,
+            "num_code_reviews": stats.num_code_reviews,
+            "num_lines_code_added_per_repo": json.loads(stats.num_lines_code_added_per_repo),
+            "num_lines_code_deleted_per_repo": json.loads(stats.num_lines_code_deleted_per_repo),
+            "num_files_changed_per_repo": json.loads(stats.num_files_changed_per_repo),
+            "num_commits_per_repo": json.loads(stats.num_commits_per_repo),
+        })
+    else:
+        return jsonify({"error": "Global statistics not found"})
 
 @bp.route('/login')
 def login():
