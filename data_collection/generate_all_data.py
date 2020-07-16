@@ -19,7 +19,8 @@ def store_mlh_user_data():
     for team_name, members in team_list.items():
         if "pod" or "mentors" or "staff" in team_name:
             for member in members:
-                add_new_user(member, team_name)
+                if db.session.query(UserInfo).filter_by(github_username=member).count() < 1:
+                    add_new_user(member)
     db.session.commit()
 
 
@@ -63,22 +64,23 @@ def add_new_user(user, team_name):
 
 
 def add_new_repo(repo):
-    if repo["isFork"]:
-        author = repo["parent"]["owner"]["login"]
-    else:
-        author = repo["owner"]["login"]
-    
-    if repo.get("primaryLanguage", False):
-        lang = repo["primaryLanguage"]["name"]
-    else:
-        lang = "None"
+    if db.session.query(Repository).filter_by(repo_id=repo["id"]).count() < 1:
+        if repo["isFork"]:
+            author = repo["parent"]["owner"]["login"]
+        else:
+            author = repo["owner"]["login"]
+        
+        if repo.get("primaryLanguage", False):
+            lang = repo["primaryLanguage"]["name"]
+        else:
+            lang = "None"
 
-    new_repo = Repository(
-        repo_id=repo["id"],
-        repo_name=repo["name"],
-        repo_author=author,
-        primary_language = lang, 
-        url=repo["url"],
-        is_fork=repo["isFork"],
-    )
-    db.session.add(new_repo)
+        new_repo = Repository(
+            repo_id=repo["id"],
+            repo_name=repo["name"],
+            repo_author=author,
+            primary_language = lang, 
+            url=repo["url"],
+            is_fork=repo["isFork"],
+        )
+        db.session.add(new_repo)
