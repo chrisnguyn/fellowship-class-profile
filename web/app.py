@@ -1,3 +1,5 @@
+import traceback
+
 import requests
 
 from flask import jsonify, render_template, request, session, redirect, url_for, Blueprint, json
@@ -96,10 +98,13 @@ def status_check():
 
 @bp.route('/callback/github')
 def callback():
-    response = github_extension.get_access_token_with_auth_code(
-        request.args.get('code'))
+    try:
+        response = github_extension.get_access_token_with_auth_code(
+            request.args.get('code'))
 
-    if response.ok:
+        print(response.status_code)
+        print(response.text)
+
         access_token = response.json()['access_token']
         session['access_token'] = access_token
 
@@ -122,8 +127,11 @@ def callback():
         session['user_id'] = User.query.filter_by(email=session['github_user_email']).first().id
 
         return redirect(url_for('app.index'))
-
-    return 'Internal Server Error', 500
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        raise e
+        return 'Something went wrong. Please try again.', 500
 
 
 @bp.route('/login/github')
@@ -136,5 +144,11 @@ def login_github():
 def logout():
     session.clear()
     return redirect(url_for('app.index'))
+
+
+@bp.route('/500')
+def error():
+    return "Internal server error", 500
+
 
 
