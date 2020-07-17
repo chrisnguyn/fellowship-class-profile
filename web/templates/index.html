@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -17,10 +18,61 @@
             .style("background-color", colors.white)
             .style("padding", "20px 24px 20px 24px")
         renderNavbar(body)
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("Class of 2020 Statistics")
+        body = body.append("div")
+            .style("padding", "0 10% 0 10%")
+        const loadData = async() => {
+            let globalData = await d3.json("{{ url_for('static',filename='dummy_data/global_stats.json') }}") // TODO: replace dummy data
+
+            console.log(globalData)
+
+            let imageAttr = {
+                height: 300,
+                width: 300
+            }
+
+            body.append("div")
+                .style("margin-top", "300px")
+                .append("svg")
+                .attr("height", imageAttr.height)
+                .attr("width", imageAttr.width)
+                .append("image")
+                .attr("href", "../static/icons/undraw_researching_22gp.svg")
+                .attr("height", imageAttr.height)
+                .attr("width", imageAttr.width)
+                .attr("x", 0)
+                .attr("y", 0)
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("Statistics for Class 0.")
+
+            let globalContributions = globalData["num_contributions_by_day"]["days"]
+            let contributionCalendar = {
+                totalContributions: globalData["num_contributions_by_day"]["totalContributions"],
+                weeks: []
+            }
+            Object.keys(globalContributions).forEach(date => {
+                if (contributionCalendar.weeks.length <= globalContributions[date].week) {
+                    contributionCalendar.weeks.push({
+                        contributionDays: []
+                    })
+                }
+            })
+            Object.keys(globalContributions).forEach(date => {
+                let day = globalContributions[date]
+                contributionCalendar.weeks[day.week].contributionDays.push({
+                    contributionCount: day.contributionCount,
+                    date: date,
+                    weekday: day.weekday
+                })
+            })
+
+            renderContributionOverTimeChart(body, contributionCalendar, "This is how we contributed throughout the course of 12 weeks.")
+
+
+        }
+        loadData()
     </script>
 
     <h1>{{session}}</h1>

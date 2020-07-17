@@ -1,4 +1,4 @@
-function renderContributionOverTimeChart(body, contributionCalendar) {
+function renderContributionOverTimeChart(body, contributionCalendar, subtitle = "This is how I contributed throughout the course of 12 weeks.") {
     let contributions = []
     contributionCalendar.weeks.forEach(week => {
         week.contributionDays.forEach(day => {
@@ -21,7 +21,7 @@ function renderContributionOverTimeChart(body, contributionCalendar) {
     body.append("div")
         .attr("class", "caption")
         .style("color", colors.black)
-        .html("This is how I contributed throughout the course of 12 weeks.")
+        .html(subtitle)
     let div = body.append("div")
         .style("display", "flex")
         .style("align-items", "center")
