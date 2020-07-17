@@ -3,6 +3,8 @@
 <p align="center"><img src="https://github.com/chrisngyn/fellowship-class-profile/blob/master/readme_imgs/ss1.png" width="80%"></p>
 
 ## Motivation
+[View our project here!](https://fellowship-class-profile.herokuapp.com/)  
+  
 Seeing your *progress overtime* is vital to developers as we can see how much we have learned and grown across a given timespan. It can be hard to remember everything you worked on and who you worked with off the top of your head, therefore the **Fellowship Class Profile** is a web application that aggregates your [GitHub data](https://docs.github.com/en/graphql) from the last 12 weeks and turns it into statistics and visualiations to conclude the MLH Fellowship, with the goal of showcasing your work and accolades.  
 
 <p align="center"><img src="https://github.com/chrisngyn/fellowship-class-profile/blob/master/readme_imgs/ss2.png" width="40%"> <img src="https://github.com/chrisngyn/fellowship-class-profile/blob/master/readme_imgs/ss3.png" width="40%"></p>
