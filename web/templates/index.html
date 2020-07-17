@@ -11,6 +11,7 @@
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/peopleStats.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/radarChart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -26,13 +27,45 @@
             .style("color", colors.black)
             .html("Class of 2020 Statistics")
 
-        const loadData = async () => {
-            let data = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
-            data = await data.json()
-            body.append("div")
-                .style("class", "subheader")
+        // const loadData = async () => {
+        //     let data = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
+        //     data = await data.json()
+        //     body.append("div")
+        //         .style("class", "subheader")
 
-            renderPeopleStats(body, data)
+        //     renderPeopleStats(body, data)
+
+        body = body.append("div")
+            .style("padding", "0 10% 0 10%")
+        const loadData = async() => {
+            let globalData = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
+            globalData = await globalData.json()
+            console.log(globalData)
+
+            let imageAttr = {
+                height: 300,
+                width: 300
+            }
+
+            body.append("div")
+                .style("margin-top", "300px")
+                .append("svg")
+                .attr("height", imageAttr.height)
+                .attr("width", imageAttr.width)
+                .append("image")
+                .attr("href", "../static/icons/undraw_design_team_af2y.svg")
+                .attr("height", imageAttr.height)
+                .attr("width", imageAttr.width)
+                .attr("x", 0)
+                .attr("y", 0)
+
+            body.append("div")
+                .attr("class", "header")
+                .style("color", colors.black)
+                .html("Statistics for Class 0.")
+
+            renderPeopleStats(body, globalData)
+            renderGlobalContributionOverTimeChart(body, globalData)
 
             body.append("div")
                 .attr("class", "subheader")
@@ -58,11 +91,11 @@
                 {
                     name: 'Code contribution stats',
                     axes: [
-                        { axis: 'Code Reviews', value: Math.log(data["num_code_reviews"]) },
-                        { axis: 'Commits', value: Math.log(data["num_commits"]) },
-                        { axis: 'Pull Requests', value: Math.log(data["num_prs"])},
-                        { axis: 'Issues Opened', value: Math.log(data["num_issues_opened"]) },
-                        { axis: 'Issues Contributed To', value: Math.log(data["num_issues_contributed"])},
+                        { axis: 'Code Reviews', value: Math.log(globalData["num_code_reviews"]) },
+                        { axis: 'Commits', value: Math.log(globalData["num_commits"]) },
+                        { axis: 'Pull Requests', value: Math.log(globalData["num_prs"])},
+                        { axis: 'Issues Opened', value: Math.log(globalData["num_issues_opened"]) },
+                        { axis: 'Issues Contributed To', value: Math.log(globalData["num_issues_contributed"])},
                     ],
                     color: '#26AF32'
                 },
@@ -85,10 +118,6 @@
             RadarChart(body, chart_data, radarChartOptions);
         }
         loadData()
-    </script>
-    <div class="radarChart"></div>
-    <script>
-
     </script>
 </body>
 
