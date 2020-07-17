@@ -24,7 +24,7 @@
         body = body.append("div")
             .style("padding", "0 10% 0 10%")
         const loadData = async () => {
-            let globalData = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
+            let globalData = await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
             globalData = await globalData.json()
             console.log(globalData)
 
