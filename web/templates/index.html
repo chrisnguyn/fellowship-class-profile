@@ -10,6 +10,7 @@
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/peopleStats.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/radarChart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/repoContribution.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -54,6 +55,7 @@
             renderGlobalContributionOverTimeChart(body, globalData)
             renderSpiderChart(body, globalData)
 
+
             body.append("div")
                 .attr("class", "subheader")
                 .style("color", colors.black)
@@ -82,6 +84,9 @@
                 .attr("class", "caption")
                 .style("color", colors.black)
                 .html("These are the languages of the repos we contributed to.")
+
+
+            renderRepoContributions(body, globalData)
 
         }
         loadData()
