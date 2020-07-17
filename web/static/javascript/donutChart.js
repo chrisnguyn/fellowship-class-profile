@@ -3,6 +3,10 @@ function renderDonutChart(body, section) {
         .attr("class", "subheader")
         .style("color", colors.black)
         .html(section.title)
+    body.append("div")
+        .attr("class", "caption")
+        .style("color", colors.black)
+        .html(section.subtitle)
     let div = body.append("div")
         .style("display", "flex")
         .style("align-items", "center")
@@ -36,7 +40,7 @@ function renderDonutChart(body, section) {
         .attr("fill", colors.black)
         .attr("text-anchor", "end")
         .attr("alignment-baseline", "hanging")
-        .text(section.subtitle)
+        .text(section.subtext)
 
 
     renderDonutChartDonut(svg, section, donutAttr)

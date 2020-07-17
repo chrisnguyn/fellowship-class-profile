@@ -11,6 +11,7 @@
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/donutChart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/teamCircle.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/highlights.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -25,49 +26,178 @@
             .style("padding", "0 10% 0 10%")
 
         const loadData = async() => {
-            let team_data = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
+            let teamData = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
+            let globalData = await d3.json("{{ url_for('static',filename='dummy_data/global_stats.json') }}") // TODO: replace dummy data
             let data = await d3.json("{{ url_for('static',filename='dummy_data/kai.json') }}") // TODO: replace dummy data
 
             // Fix data.
             data["num_contributions"] = data["num_commits"] // NOTE: num_commits in data is actually num_contributions
             data["num_commits"] = data["num_contributions"] - data["num_code_reviews"] - data["num_prs"] - data["num_issues_opened"]
 
+            console.log(globalData)
             console.log(data)
 
-            let username = data["github_username"]
-            let pod = data["pod"]
+            let personalStatImageAttr = {
+                height: 300,
+                width: 300
+            }
+
+            body.append("div")
+                .style("margin-top", "300px")
+                .append("svg")
+                .attr("height", personalStatImageAttr.height)
+                .attr("width", personalStatImageAttr.width)
+                .append("image")
+                .attr("href", "../static/icons/undraw_researching_22gp.svg")
+                .attr("height", personalStatImageAttr.height)
+                .attr("width", personalStatImageAttr.width)
+                .attr("x", 0)
+                .attr("y", 0)
 
             body.append("div")
                 .attr("class", "header")
                 .style("color", colors.black)
                 .html("My MLH fellowship.")
 
-            renderTeamCircle(body, team_data, pod, username)
+            let username = data["github_username"]
+            let pod = data["pod"]
+            renderTeamCircle(body, teamData, pod, username)
+
+            renderPersonalHighlights(body, data)
 
             let personalSummary = getPersonalSummary(data)
             console.log(personalSummary)
-            Object.keys(personalSummary).forEach(key => {
-                let section = personalSummary[key]
-                renderDonutChart(body, section)
-            })
+            renderDonutChart(body, personalSummary["contribution"])
+
+            // Object.keys(personalSummary).forEach(key => {
+            //     let section = personalSummary[key]
+            //     renderDonutChart(body, section)
+            // })
 
             let contributionCalendar = data["contribution_graph"]
-
-            body.append("div")
-                .attr("class", "header")
-                .style("color", colors.black)
-                .html("My contributions.")
             renderContributionOverTimeChart(body, contributionCalendar)
 
-            body.append("div")
-                .attr("class", "header")
-                .style("color", colors.black)
-                .html("My pull requests.")
+            renderDonutChart(body, personalSummary["repositories"])
 
             body.append("div")
-                .attr("class", "header")
+                .attr("class", "subheader")
                 .style("color", colors.black)
-                .html("My issues.")
+                .html("Collaborators")
+            body.append("div")
+                .attr("class", "caption")
+                .style("color", colors.black)
+                .html("This is who I spent my time working with.")
+            let div = body.append("div")
+                .style("display", "flex")
+                .style("align-items", "center")
+                .style("justify-content", "center")
+            let svg = div.append("svg")
+                .attr("height", 500)
+                .attr("width", 900)
+
+            let height = svg.attr("height")
+            let width = svg.attr("width")
+
+            let collaborators = data["collaborators"]
+            collaborators = Object.keys(collaborators).map(name => {
+                return {
+                    name: name,
+                    amount: collaborators[name]
+                }
+            })
+            collaborators.sort((a, b) => {
+                return a.amount > b.amount ? -1 : 1
+            })
+            let circleRadius = 8
+            let textX = 100
+
+            let minCollab = d3.min(collaborators, d => {
+                return d.amount
+            }) - 1
+            let maxCollab = d3.max(collaborators, d => {
+                return d.amount
+            }) + 1
+            let xScale = d3.scaleLinear()
+                .domain([minCollab, maxCollab])
+                .range([textX + circleRadius + 16, width - textX])
+            let yScale = d3.scaleBand()
+                .domain(collaborators.map(d => {
+                    return d.name
+                }))
+                .range([48, height - 16])
+
+            collaborators.forEach(d => {
+                let name = d.name
+                let amount = Number(d.amount)
+                let g = svg.append("g")
+
+                let nameText = g.append("text")
+                    .attr("class", "caption")
+                    .attr("fill", colors.black)
+                    .attr("text-anchor", "end")
+                    .attr("alignment-baseline", "middle")
+                    .attr("x", textX)
+                    .attr("y", yScale(name))
+                    .text(name)
+
+                g.append("circle")
+                    .attr("cx", xScale(minCollab))
+                    .attr("cy", yScale(name))
+                    .attr("r", circleRadius)
+                    .attr("fill", colors.blue)
+
+                let line = g.append("line")
+                    .attr("x1", xScale(minCollab))
+                    .attr("x2", xScale(amount))
+                    .attr("y1", yScale(name))
+                    .attr("y2", yScale(name))
+                    .attr("stroke", colors.blue)
+                    .attr("stroke-width", circleRadius / 2)
+
+                g.append("circle")
+                    .attr("cx", xScale(amount))
+                    .attr("cy", yScale(name))
+                    .attr("r", circleRadius)
+                    .attr("fill", colors.blue)
+
+                g.on("mouseover", function() {
+                        line.transition()
+                            .duration(40)
+                            .ease(d3.easeLinear)
+                            .attr("stroke-width", circleRadius * 2)
+                        nameText.attr("fill", colors.blue)
+                        showText(amount, name)
+                    })
+                    .on("mouseout", function() {
+                        line.transition()
+                            .duration(40)
+                            .ease(d3.easeLinear)
+                            .attr("stroke-width", circleRadius / 2)
+                        nameText.attr("fill", colors.black)
+                        hideText()
+                    })
+            })
+
+            let hoverText = svg.append("text")
+                .attr("font-family", "Space Mono")
+                .attr("font-size", 12)
+                .attr("text-anchor", "start")
+                .attr("alignment-baseline", "middle")
+                .attr("fill", colors.blue)
+                .attr("visibility", "hidden")
+
+            function showText(amount, name) {
+                hoverText.attr("visibility", "visible")
+                    .attr("x", Number(xScale(amount)) + Number(circleRadius) + 12)
+                    .attr("y", yScale(name))
+                    .text(amount + (amount != 1 ? " PRs" : " PR"))
+            }
+
+            function hideText() {
+                hoverText.attr("visibility", "hidden")
+            }
+
+
 
         }
         loadData()

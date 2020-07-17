@@ -1,8 +1,12 @@
-function renderTeamCircle(body, team_data, pod, username) {
+function renderTeamCircle(body, teamData, pod, username) {
     body.append("div")
         .attr("class", "subheader")
         .style("color", colors.black)
         .html("Team")
+    body.append("div")
+        .attr("class", "caption")
+        .style("color", colors.black)
+        .html("Here is who I collaborated with as part of " + pod + ".")
     let div = body.append("div")
         .style("display", "flex")
         .style("align-items", "center")
@@ -14,7 +18,7 @@ function renderTeamCircle(body, team_data, pod, username) {
     let height = svg.attr("height")
     let width = svg.attr("width")
 
-    let team = team_data[pod]
+    let team = teamData[pod]
 
     let angleScale = d3.scaleLinear()
         .domain([0, team.length])

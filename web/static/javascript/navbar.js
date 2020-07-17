@@ -112,7 +112,8 @@ function renderNavbar(body) {
         .on("mouseout", function() {
             tabRect.transition()
                 .duration(tabRectTransition)
-                .ease(d3.easeLinear).attr("x", getTabPosition())
+                .ease(d3.easeLinear)
+                .attr("x", getTabPosition())
         })
         .on("mousedown", function() {
             window.location.pathname = pages.CLASS_0

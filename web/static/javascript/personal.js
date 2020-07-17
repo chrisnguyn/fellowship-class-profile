@@ -24,13 +24,15 @@ function getPersonalSummary(data) {
 
     personalSummary.contribution = {
         title: "Contribution",
-        subtitle: "Total contributions",
+        subtitle: "This is how I spent my time.",
+        subtext: "Total contributions",
         list: contributions,
         total: totalContributions
     }
     personalSummary.repositories = {
         title: "Repositories",
-        subtitle: "Repositories worked on",
+        subtitle: "This is what I spent my time working on.",
+        subtext: "Repositories worked on",
         list: [],
         total: data["num_repos"]
     }
