@@ -21,8 +21,8 @@
         body = body.append("div")
             .style("padding", "0 10% 0 10%")
         const loadData = async() => {
-            let globalData = await d3.json("{{ url_for('static',filename='dummy_data/global_stats.json') }}") // TODO: replace dummy data
-
+            let globalData = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
+            globalData = await globalData.json()
             console.log(globalData)
 
             let imageAttr = {

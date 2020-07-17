@@ -29,8 +29,6 @@
 
         const loadData = async() => {
             let teamData = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
-            let globalData = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
-            globalData = await globalData.json();
             let data = await fetch(`https://fellowship-class-profile.herokuapp.com/user_stats?username={{username}}`)
             data = await data.json()
 
@@ -38,7 +36,6 @@
             data["num_contributions"] = data["num_commits"] // NOTE: num_commits in data is actually num_contributions
             data["num_commits"] = data["num_contributions"] - data["num_code_reviews"] - data["num_prs"] - data["num_issues_opened"]
 
-            console.log(globalData)
             console.log(data)
 
             let personalStatImageAttr = {
