@@ -97,7 +97,12 @@ const RadarChart = function RadarChart(body, data, options) {
     // parent.select("svg").remove();
 
     //Initiate the radar chart SVG
-    let svg = body.append("svg")
+    let div = body.append("div")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("justify-content", "center")
+
+    let svg = div.append("svg")
         .attr("width", cfg.w + cfg.margin.left + cfg.margin.right)
         .attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom)
         .attr("class", "radar");
@@ -208,7 +213,7 @@ const RadarChart = function RadarChart(body, data, options) {
         .style("fill-opacity", cfg.opacityArea)
         .on('mouseover', function (d, i) {
             //Dim all blobs
-            body.selectAll(".radarArea")
+            div.selectAll(".radarArea")
                 .transition().duration(200)
                 .style("fill-opacity", 0.1);
             //Bring back the hovered over blob
@@ -218,7 +223,7 @@ const RadarChart = function RadarChart(body, data, options) {
         })
         .on('mouseout', () => {
             //Bring back all blobs
-            body.selectAll(".radarArea")
+            div.selectAll(".radarArea")
                 .transition().duration(200)
                 .style("fill-opacity", cfg.opacityArea);
         });
