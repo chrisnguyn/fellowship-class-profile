@@ -6,6 +6,8 @@ anychart.onDocumentReady(function() {
                          .then(data => generate_word_cloud(data))
 
     function generate_word_cloud(org_stats) {
+        console.log(org_stats)
+
         for (let key in org_stats) {
             if (key === "TOTAL NUMBER REPOS" || key === "None") {
                 continue;
