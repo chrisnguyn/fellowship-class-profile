@@ -3,3 +3,4 @@ flask
 gunicorn
 flask_sqlalchemy
 psycopg2-binary
+flask-cors
