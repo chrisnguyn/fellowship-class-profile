@@ -10,6 +10,7 @@
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/peopleStats.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/radarChart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/contributionOverTimeChart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='javascript/repoContribution.js') }}"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <title>Glorious Geese</title>
 </head>
@@ -53,26 +54,7 @@
             renderPeopleStats(body, globalData)
             renderGlobalContributionOverTimeChart(body, globalData)
             renderSpiderChart(body, globalData)
-
-            body.append("div")
-                .attr("class", "subheader")
-                .style("color", colors.black)
-                .html("Repository contributions")
-            body.append("div")
-                .attr("class", "caption")
-                .style("color", colors.black)
-                .html("This is how we contributed across repositories.")
-            let div = body.append("div")
-                .style("display", "flex")
-                .style("align-items", "center")
-                .style("justify-content", "center")
-                .style("width", "100%")
-            let svg = div.append("svg")
-                .attr("height", 700)
-                .attr("width", 1000)
-            let height = svg.attr("height")
-            let width = svg.attr("width")
-
+            renderRepoContributions(body, globalData)
         }
         loadData()
     </script>
