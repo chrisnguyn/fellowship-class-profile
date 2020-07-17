@@ -28,7 +28,7 @@
             .style("transform", "translate(-50%, -50%)")
             .style("margin", 0)
 
-        let imageSize = 140
+        let imageSize = 300
         let imageSvg = body.append("div")
             .style("padding", "3% 0 0 0")
             .style("display", "flex")
@@ -39,7 +39,7 @@
             .attr("height", imageSize)
             .attr("width", imageSize)
         imageSvg.append("image")
-            .attr("href", "../static/icons/github.svg")
+            .attr("href", "../static/icons/undraw_statistic_chart_38b6.svg")
             .attr("height", imageSize)
             .attr("width", imageSize)
             .attr("x", 0)
@@ -65,7 +65,7 @@
 
         let svg = div.append("svg")
             .attr("height", 40)
-            .attr("width", 140)
+            .attr("width", 120)
 
         let height = svg.attr("height")
         let width = svg.attr("width")
@@ -78,15 +78,19 @@
             .attr("rx", 20)
             .attr("fill", colors.yellow)
 
-        svg.append("text")
-            .attr("font-family", "Space Mono")
-            .attr("font-size", 14)
-            .attr("text-anchor", "middle")
-            .attr("alignment-baseline", "middle")
-            .attr("fill", colors.white)
-            .attr("x", width / 2)
-            .attr("y", height / 2)
-            .text("GitHub ➝")
+        svg.append("image")
+            .attr("href", "../static/icons/github.svg")
+            .attr("height", height / 2)
+            .attr("width", height / 2)
+            .attr("x", 12)
+            .attr("y", height / 4)
+
+        svg.append("image")
+            .attr("href", "../static/icons/GitHub_Logo_White.svg")
+            .attr("height", height * 0.65)
+            .attr("width", width - height / 2 - 48)
+            .attr("x", height / 2 + 24)
+            .attr("y", height / 2 - height * 0.65 / 2)
 
         svg.append("rect")
             .attr("id", "buttonCentre")

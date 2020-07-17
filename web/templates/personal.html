@@ -23,6 +23,7 @@
         renderNavbar(body)
         body = body.append("div")
             .style("padding", "0 10% 0 10%")
+
         const loadData = async() => {
             let contributions_data = await d3.json("{{ url_for('static',filename='dummy_data/contribution_graph.json') }}")
             let team_data = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
