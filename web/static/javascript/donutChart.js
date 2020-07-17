@@ -11,16 +11,17 @@ function renderDonutChart(body, section) {
         .style("display", "flex")
         .style("align-items", "center")
         .style("justify-content", "center")
+        .style("width", "100%")
     let svg = div.append("svg")
-        .attr("height", 200)
-        .attr("width", 700)
+        .attr("height", 400)
+        .attr("width", 1000)
 
     let height = svg.attr("height")
     let width = svg.attr("width")
 
     let donutAttr = {
-        outerRadius: height / 2 - 4,
-        innerRadius: height / 2 - 54
+        outerRadius: height / 2 - 54,
+        innerRadius: height / 2 - 104
     }
     let horizontalPadding = 40
     let verticalPadding = 20
@@ -92,7 +93,7 @@ function renderDonutChartLegend(svg, section, donutAttr, horizontalPadding) {
         squareSize: 12,
         yScale: d3.scaleLinear()
             .domain([0, section.list.length - 1])
-            .range([24, height - 24])
+            .range([72, height - 72])
     }
 
     svg.append("line")

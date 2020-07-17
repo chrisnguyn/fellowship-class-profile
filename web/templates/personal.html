@@ -65,7 +65,8 @@
             let pod = data["pod"]
             renderTeamCircle(body, teamData, pod, username)
 
-            renderPersonalHighlights(body, data)
+            let collaborators = data["collaborators"]
+            renderPersonalCollaborators(body, collaborators)
 
             let personalSummary = getPersonalSummary(data)
             console.log(personalSummary)
@@ -81,11 +82,10 @@
 
             renderDonutChart(body, personalSummary["repositories"])
 
-            let collaborators = data["collaborators"]
-            renderPersonalCollaborators(body, collaborators)
-
             let repos = data["repo_changes"]
             renderRepoContributionChart(body, repos)
+
+            renderPersonalHighlights(body, data)
         }
         loadData()
     </script>
