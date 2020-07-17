@@ -1,4 +1,4 @@
-function renderTeamCircle(body, team_data, username) {
+function renderTeamCircle(body, team_data, pod, username) {
     body.append("div")
         .attr("class", "subheader")
         .style("color", colors.black)
@@ -14,16 +14,14 @@ function renderTeamCircle(body, team_data, username) {
     let height = svg.attr("height")
     let width = svg.attr("width")
 
-    let team = Object.keys(team_data).find(team => {
-        return team_data[team].includes(username)
-    })
+    let team = team_data[pod]
 
     let angleScale = d3.scaleLinear()
-        .domain([0, team_data[team].length])
+        .domain([0, team.length])
         .range([0, 2 * Math.PI])
 
     let radius = {
-        pod: team.length * 4 + 4,
+        pod: pod.length * 4 + 4,
         memberRing: Math.min(height, width) - 400,
         member: 10
     }
@@ -55,9 +53,9 @@ function renderTeamCircle(body, team_data, username) {
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "middle")
         .attr("fill", colors.black)
-        .text(team)
+        .text(pod)
 
-    team_data[team].forEach((member, i) => {
+    team.forEach((member, i) => {
         let angle = angleScale(i)
         let x = width / 2 + radius.memberRing * Math.cos(angle)
         let y = height / 2 + radius.memberRing * Math.sin(angle)
@@ -74,6 +72,7 @@ function renderTeamCircle(body, team_data, username) {
             .attr("class", "caption")
             .attr("x", x)
             .attr("y", y)
+            .attr("font-weight", member == username ? 700 : 400)
             .attr("text-anchor", (angle > 90 && angle < 270) ? "end" : "start")
             .attr("alignment-baseline", "middle")
             .attr("fill", colors.black)

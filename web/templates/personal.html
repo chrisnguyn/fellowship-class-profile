@@ -25,30 +25,39 @@
             .style("padding", "0 10% 0 10%")
 
         const loadData = async() => {
-            let contributions_data = await d3.json("{{ url_for('static',filename='dummy_data/contribution_graph.json') }}")
             let team_data = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
-                // let data = await d3.json("https://fellowship-class-profile.herokuapp.com/user_stats?username=kx-chen")
-                // console.log(data)
+            let data = await d3.json("{{ url_for('static',filename='dummy_data/kai.json') }}") // TODO: replace dummy data
 
-            let username = "YKo20010" // TODO: Replace dummy data.
+            // Fix data.
+            data["num_contributions"] = data["num_commits"] // NOTE: num_commits in data is actually num_contributions
+            data["num_commits"] = data["num_contributions"] - data["num_code_reviews"] - data["num_prs"] - data["num_issues_opened"]
+
+            console.log(data)
+
+            let username = data["github_username"]
+            let pod = data["pod"]
 
             body.append("div")
                 .attr("class", "header")
                 .style("color", colors.black)
                 .html("My MLH fellowship.")
 
-            renderTeamCircle(body, team_data, username)
+            renderTeamCircle(body, team_data, pod, username)
 
+            let personalSummary = getPersonalSummary(data)
+            console.log(personalSummary)
             Object.keys(personalSummary).forEach(key => {
                 let section = personalSummary[key]
                 renderDonutChart(body, section)
             })
 
+            let contributionCalendar = data["contribution_graph"]
+
             body.append("div")
                 .attr("class", "header")
                 .style("color", colors.black)
                 .html("My contributions.")
-            renderContributionOverTimeChart(body, contributions_data)
+            renderContributionOverTimeChart(body, contributionCalendar)
 
             body.append("div")
                 .attr("class", "header")

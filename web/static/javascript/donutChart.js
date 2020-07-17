@@ -107,7 +107,7 @@ function renderDonutChartLegend(svg, section, donutAttr, horizontalPadding) {
             .attr("fill", colors.black)
             .attr("text-anchor", "end")
             .attr("alignment-baseline", "middle")
-            .text((d.percent * 100) + "%")
+            .text(Math.round(d.percent * 1000) / 10 + "%")
         svg.append("rect")
             .attr("height", legendAttr.squareSize)
             .attr("width", legendAttr.squareSize)

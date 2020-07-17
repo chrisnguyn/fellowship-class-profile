@@ -1,8 +1,4 @@
-function renderContributionOverTimeChart(body, contributions_data) {
-    let contributionCalendar = contributions_data.data.user.contributionsCollection.contributionCalendar
-
-    // console.log(contributionCalendar)
-
+function renderContributionOverTimeChart(body, contributionCalendar) {
     let contributions = []
     contributionCalendar.weeks.forEach(week => {
         week.contributionDays.forEach(day => {
@@ -131,7 +127,6 @@ function renderContributionOverTimeChart(body, contributions_data) {
 
     function showLabels(d, i) {
         let dateTime = dateTimeParser(d.date)
-        console.log(dateTime)
         let labelY = contributionYScale(d.count > averageContributionPerDay ? maxContributions : minContributions) +
             (rectWidth + 12) * (d.count > averageContributionPerDay ? -1 : 1)
         dateLabel.attr("visibility", "visible")
