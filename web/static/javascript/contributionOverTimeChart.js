@@ -1,3 +1,28 @@
+function renderGlobalContributionOverTimeChart(body, globalData) {
+    let globalContributions = globalData["num_contributions_by_day"]["days"]
+    let contributionCalendar = {
+        totalContributions: globalData["num_contributions_by_day"]["totalContributions"],
+        weeks: []
+    }
+    Object.keys(globalContributions).forEach(date => {
+        if (contributionCalendar.weeks.length <= globalContributions[date].week) {
+            contributionCalendar.weeks.push({
+                contributionDays: []
+            })
+        }
+    })
+    Object.keys(globalContributions).forEach(date => {
+        let day = globalContributions[date]
+        contributionCalendar.weeks[day.week].contributionDays.push({
+            contributionCount: day.contributionCount,
+            date: date,
+            weekday: day.weekday
+        })
+    })
+
+    renderContributionOverTimeChart(body, contributionCalendar, "This is how we contributed throughout the course of 12 weeks.")
+}
+
 function renderContributionOverTimeChart(body, contributionCalendar, subtitle = "This is how I contributed throughout the course of 12 weeks.") {
     let contributions = []
     contributionCalendar.weeks.forEach(week => {
