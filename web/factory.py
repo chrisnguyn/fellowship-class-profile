@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -20,5 +21,6 @@ def create_app(init_db=False):
 
     from web.app import bp
     app.register_blueprint(bp)
+    CORS(app)
 
     return app
