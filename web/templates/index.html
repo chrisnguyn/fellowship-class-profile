@@ -21,9 +21,101 @@
             .attr("class", "header")
             .style("color", colors.black)
             .html("Class of 2020 Statistics")
-    </script>
+        // body = body.append("div")
+        //     .style("position", "absolute")
+        //     .style("top", "50%")
+        //     .style("left", "50%")
+        //     .style("-ms-transform", "translate(-50%, -50%)")
+        //     .style("transform", "translate(-50%, -50%)")
+        //     .style("margin", 0)
+        const loadData = async() => {
+            let data = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
+            data = await data.json();
 
-    <h1>{{session}}</h1>
+            
+            body.append("div")
+                .style("class", "subheader")
+
+            function renderPeopleStats(body, data) {
+                body.append("div")
+                    .attr("class", "subheader")
+                    .style("color", colors.black)
+                    .html("People")
+                body.append("div")
+                    .attr("class", "caption")
+                    .style("color", colors.black)
+                    .html("Introducing Class 0.")
+                let div = body.append("div")
+                    .style("display", "flex")
+                    .style("align-items", "center")
+                    .style("justify-content", "center")
+                    .style("width", "100%")
+                    .style("padding", "48px 0px 48px 0px")
+                let svg = div.append("svg")
+                    .attr("height", 400)
+                    .attr("width", 1200)
+
+                let height = svg.attr("height")
+                let width = svg.attr("width")
+
+                let highlights = [{
+                    title: data["num_members"],
+                    text: [
+                        "fellows, mentors, and staff",
+                    ]
+                }, {
+                    title: data["num_countries"],
+                    text: [
+                        "countries collaborated across"
+                    ]
+                }, {
+                    title: data["num_timezone"],
+                    text: [
+                        "timeszones bridged"
+                    ]
+                }]
+
+                let imageAttr = {
+                    height: 25,
+                    width: 300
+                }
+
+                let xScale = d3.scaleLinear()
+                    .domain([0, highlights.length - 1])
+                    .range([imageAttr.width / 2, width - 2 * imageAttr.width / 2])
+
+                // Most active week, most active day, most popular pr.
+
+                highlights.forEach((highlight, i) => {
+                    svg.append("text")
+                        .attr("class", "header")
+                        .attr("width", imageAttr.width)
+                        .attr("x", xScale(i))
+                        .attr("y", imageAttr.height + 12)
+                        .attr("fill", colors.black)
+                        .attr("text-anchor", "middle")
+                        .attr("alignment-baseline", "middle")
+                        .text(highlight.title)
+                    let textY = imageAttr.height + 48
+                    highlight.text.forEach(line => {
+                        svg.append("text")
+                            .attr("class", "caption")
+                            .attr("x", xScale(i))
+                            .attr("y", textY)
+                            .attr("fill", colors.black)
+                            .attr("text-anchor", "middle")
+                            .attr("alignment-baseline", "middle")
+                            .text(line)
+                        textY = textY + 20
+                    })
+                })
+            }
+            renderPeopleStats(body, data)
+        }
+        loadData()
+        
+
+    </script>
 </body>
 
 </html>
