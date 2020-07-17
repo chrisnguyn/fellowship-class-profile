@@ -31,6 +31,13 @@
             let teamData = await d3.json("{{ url_for('static',filename='dummy_data/group_members_by_teams.json') }}")
             let data = await fetch(`https://fellowship-class-profile.herokuapp.com/user_stats?username={{username}}`)
             data = await data.json()
+            if (data["error"]) {
+                body.append("div")
+                    .attr("class", "header")
+                    .style("color", colors.black)
+                    .html("We could not find your data. You must be part of the MLH Fellowship to use this app.")
+                return;
+            }
 
             // Fix data.
             data["num_contributions"] = data["num_commits"] // NOTE: num_commits in data is actually num_contributions
