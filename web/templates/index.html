@@ -27,17 +27,9 @@
             .style("color", colors.black)
             .html("Class of 2020 Statistics")
 
-        // const loadData = async () => {
-        //     let data = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
-        //     data = await data.json()
-        //     body.append("div")
-        //         .style("class", "subheader")
-
-        //     renderPeopleStats(body, data)
-
         body = body.append("div")
             .style("padding", "0 10% 0 10%")
-        const loadData = async() => {
+        const loadData = async () => {
             let globalData = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
             globalData = await globalData.json()
             console.log(globalData)
@@ -48,7 +40,7 @@
             }
 
             body.append("div")
-                .style("margin-top", "300px")
+                .style("margin-top", "200px")
                 .append("svg")
                 .attr("height", imageAttr.height)
                 .attr("width", imageAttr.width)
@@ -93,9 +85,9 @@
                     axes: [
                         { axis: 'Code Reviews', value: Math.log(globalData["num_code_reviews"]) },
                         { axis: 'Commits', value: Math.log(globalData["num_commits"]) },
-                        { axis: 'Pull Requests', value: Math.log(globalData["num_prs"])},
+                        { axis: 'Pull Requests', value: Math.log(globalData["num_prs"]) },
                         { axis: 'Issues Opened', value: Math.log(globalData["num_issues_opened"]) },
-                        { axis: 'Issues Contributed To', value: Math.log(globalData["num_issues_contributed"])},
+                        { axis: 'Issues Contributed To', value: Math.log(globalData["num_issues_contributed"]) },
                     ],
                     color: '#26AF32'
                 },
@@ -111,14 +103,77 @@
                 roundStrokes: true,
                 color: d3.scaleOrdinal().range([colors.green, colors.blue, colors.yellow]),
                 format: '.0f',
-                unit: 'e^'    
+                unit: 'e^'
             };
 
             // Draw the radar chart
             RadarChart(body, chart_data, radarChartOptions);
+
+            body.append("div")
+                .attr("class", "subheader")
+                .style("color", colors.black)
+                .html("Repositories")
+            body.append("div")
+                .attr("class", "caption")
+                .style("color", colors.black)
+                .html("These are the languages of the repos we contributed to.")
         }
         loadData()
     </script>
+</body>
+
+<head>
+    <title>MLH Repo Cloud</title>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
+    <style>
+        html,
+        body,
+        #cloud-container {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        anychart.onDocumentReady(function () {
+                let display_data = []
+                let org_statistics = fetch("https://fellowship-class-profile.herokuapp.com/global_stats")
+                    .then(response => response.json())
+                    .then(json_response => json_response["repo_lang_stats"])
+                    .then(data => generate_word_cloud(data))
+
+                function generate_word_cloud(org_stats) {
+                    console.log(org_stats)
+
+                    for (let key in org_stats) {
+                        if (key === "TOTAL NUMBER REPOS" || key === "None") {
+                            continue;
+                        }
+
+                        let val = org_stats[key];
+                        display_data.push({ "x": `${key}`, "value": `${val}`, category: `${key}` })
+                    }
+
+                    let chart = anychart.tagCloud(display_data);
+                    chart.angles([0])
+                    chart.colorRange(true);
+                    chart.colorRange().length('80%');
+                    chart.container("cloud-container");
+                    chart.background().fill(colors.white);
+                    chart.draw();
+                    chart.height("100%");
+                    chart.width("100%");
+                }
+            });
+    </script> 
+    <div id="cloud-container" style="margin: 0 auto; padding-left: 10px;"> </div>
 </body>
 
 </html>
