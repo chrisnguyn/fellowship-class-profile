@@ -22,7 +22,7 @@
     body,
     #cloud-container {
         width: "100%";
-        height: "500px";
+        height: 100%;
         align-items: center;
         justify-content: center;
     }
@@ -81,7 +81,6 @@
 
         }
         loadData()
-
     </script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/confetti.js') }}">
     </script>
@@ -116,10 +115,12 @@
                 chart.container("cloud-container");
                 chart.background().fill(colors.white);
                 chart.draw();
-                chart.height("100%");
+                chart.height("500px");
                 chart.width("100%");
             }
         });
     </script>
-    <div id="cloud-container" style="margin: 0 auto;"> </div>
+    <div style="height:500px">
+        <div id="cloud-container" style="margin: 0 auto;"> </div>
+    </div>
 </body>
