@@ -1,3 +1,64 @@
+function renderSpiderChart(body, globalData) {
+    body.append("div")
+        .attr("class", "subheader")
+        .style("color", colors.black)
+        .html("Global contributions")
+    body.append("div")
+        .attr("class", "caption")
+        .style("color", colors.black)
+        .html("This is how our contributions were distributed.")
+    body.append("div")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("justify-content", "center")
+        .style("width", "100%")
+        .style("padding", "10px 0px 10px 0px")
+
+    let margin = {
+            top: 30,
+            right: 80,
+            bottom: 20,
+            left: 80
+        },
+        width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+        height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+
+    let chart_data = [{
+        name: 'Code contribution stats',
+        axes: [{
+            axis: 'Code Reviews',
+            value: Math.log(globalData["num_code_reviews"])
+        }, {
+            axis: 'Commits',
+            value: Math.log(globalData["num_commits"])
+        }, {
+            axis: 'Pull Requests',
+            value: Math.log(globalData["num_prs"])
+        }, {
+            axis: 'Issues Opened',
+            value: Math.log(globalData["num_issues_opened"])
+        }, {
+            axis: 'Issues Contributed To',
+            value: Math.log(globalData["num_issues_contributed"])
+        }, ],
+        color: '#26AF32'
+    }, ];
+
+    let radarChartOptions = {
+        w: 390,
+        h: 450,
+        margin: margin,
+        levels: 5,
+        roundStrokes: true,
+        color: d3.scaleOrdinal().range([colors.blue]),
+        format: '.0f',
+        unit: 'e^'
+    };
+
+    // Draw the radar chart
+    RadarChart(body, chart_data, radarChartOptions);
+}
+
 /////////////////////////////////////////////////////////
 /////////////// The Radar Chart Function ////////////////
 /// mthh - 2017 /////////////////////////////////////////
@@ -5,16 +66,15 @@
 // (VisualCinnamon.com) and modified for d3 v4 //////////
 /////////////////////////////////////////////////////////
 
-const max = Math.max;
-const sin = Math.sin;
-const cos = Math.cos;
-const HALF_PI = Math.PI / 2;
-
-const RadarChart = function RadarChart(body, data, options) {
+let RadarChart = function RadarChart(body, data, options) {
+    let max = Math.max;
+    let sin = Math.sin;
+    let cos = Math.cos;
+    let HALF_PI = Math.PI / 2;
     //Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
-    const wrap = (text, width) => {
+    let wrap = (text, width) => {
             text.each(function() {
-                var text = d3.select(this),
+                let text = d3.select(this),
                     words = text.text().split(/\s+/).reverse(),
                     word,
                     line = [],
@@ -44,7 +104,7 @@ const RadarChart = function RadarChart(body, data, options) {
             });
         } //wrap
 
-    const cfg = {
+    let cfg = {
         w: 600, //Width of the circle
         h: 600, //Height of the circle
         margin: { top: 20, right: 20, bottom: 20, left: 20 }, //The margins of the SVG
@@ -63,15 +123,15 @@ const RadarChart = function RadarChart(body, data, options) {
         legend: false
     };
 
-    //Put all of the options into a variable called cfg
+    //Put all of the options into a letiable called cfg
     if ('undefined' !== typeof options) {
-        for (var i in options) {
+        for (let i in options) {
             if ('undefined' !== typeof options[i]) { cfg[i] = options[i]; }
         } //for i
     } //if
 
     //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-    // var maxValue = max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
+    // let maxValue = max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
     let maxValue = 0;
     for (let j = 0; j < data.length; j++) {
         for (let i = 0; i < data[j].axes.length; i++) {
@@ -83,21 +143,21 @@ const RadarChart = function RadarChart(body, data, options) {
     }
     maxValue = max(cfg.maxValue, maxValue);
 
-    const allAxis = data[0].axes.map((i, j) => i.axis), //Names of each axis
+    let allAxis = data[0].axes.map((i, j) => i.axis), //Names of each axis
         total = allAxis.length, //The number of different axes
         radius = Math.min(cfg.w / 2, cfg.h / 2), //Radius of the outermost circle
         Format = d3.format(cfg.format), //Formatting
         angleSlice = Math.PI * 2 / total; //The width in radians of each "slice"
 
     //Scale for the radius
-    const rScale = d3.scaleLinear()
+    let rScale = d3.scaleLinear()
         .range([0, radius])
         .domain([0, maxValue]);
 
     /////////////////////////////////////////////////////////
     //////////// Create the container SVG and g /////////////
     /////////////////////////////////////////////////////////
-    // const parent = d3.select(parent_selector);
+    // let parent = d3.select(parent_selector);
 
     //Remove whatever chart with the same id/class was present before
     // parent.select("svg").remove();
@@ -152,7 +212,7 @@ const RadarChart = function RadarChart(body, data, options) {
     /////////////////////////////////////////////////////////
 
     //Create the straight lines radiating outward from the center
-    var axis = axisGrid.selectAll(".axis")
+    let axis = axisGrid.selectAll(".axis")
         .data(allAxis)
         .enter()
         .append("g")
@@ -182,7 +242,7 @@ const RadarChart = function RadarChart(body, data, options) {
     /////////////////////////////////////////////////////////
 
     //The radial line function
-    const radarLine = d3.radialLine()
+    let radarLine = d3.radialLine()
         .curve(d3.curveLinearClosed)
         .radius(d => rScale(d.value))
         .angle((d, i) => i * angleSlice);
@@ -192,7 +252,7 @@ const RadarChart = function RadarChart(body, data, options) {
     }
 
     //Create a wrapper for the blobs
-    const blobWrapper = g.selectAll(".radarWrapper")
+    let blobWrapper = g.selectAll(".radarWrapper")
         .data(data)
         .enter().append("g")
         .attr("class", "radarWrapper");
@@ -246,7 +306,7 @@ const RadarChart = function RadarChart(body, data, options) {
     /////////////////////////////////////////////////////////
 
     //Wrapper for the invisible circles on top
-    const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
+    let blobCircleWrapper = g.selectAll(".radarCircleWrapper")
         .data(data)
         .enter().append("g")
         .attr("class", "radarCircleWrapper");
@@ -274,7 +334,7 @@ const RadarChart = function RadarChart(body, data, options) {
                 .style('display', 'none').text('');
         });
 
-    const tooltip = g.append("text")
+    let tooltip = g.append("text")
         .attr("font-size", 12)
         .attr("font-family", "Space Mono")
         .attr("fill", colors.blue)
