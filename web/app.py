@@ -96,34 +96,36 @@ def status_check():
 
 @bp.route('/callback/github')
 def callback():
-    response = github_extension.get_access_token_with_auth_code(
-        request.args.get('code'))
+    try:
+        response = github_extension.get_access_token_with_auth_code(
+            request.args.get('code'))
 
-    if response.ok:
-        access_token = response.json()['access_token']
-        session['access_token'] = access_token
+        if response.ok:
+            access_token = response.json()['access_token']
+            session['access_token'] = access_token
 
-        url = GitHubExtension.API_URL + '/user'
-        params = {'access_token': access_token}
+            url = GitHubExtension.API_URL + '/user'
+            params = {'access_token': access_token}
 
-        github_user_data = requests.get(url, params=params).json()
-        github_user_email = requests.get(url + '/emails', params=params).json()
+            github_user_data = requests.get(url, params=params).json()
+            github_user_email = requests.get(url + '/emails', params=params).json()
 
-        session['github_user_email'] = github_user_email[0]['email']
-        session['username'] = github_user_data['login']
+            session['github_user_email'] = github_user_email[0]['email']
+            session['username'] = github_user_data['login']
 
-        if not User.query.filter_by(email=session['github_user_email']).first():
-            new_user = User(github_access_token=access_token,
-                            github_username=github_user_data['login'],
-                            email=github_user_email[0]['email'])
-            db.session.add(new_user)
-            db.session.commit()
+            if not User.query.filter_by(email=session['github_user_email']).first():
+                new_user = User(github_access_token=access_token,
+                                github_username=github_user_data['login'],
+                                email=github_user_email[0]['email'])
+                db.session.add(new_user)
+                db.session.commit()
 
-        session['user_id'] = User.query.filter_by(email=session['github_user_email']).first().id
+            session['user_id'] = User.query.filter_by(email=session['github_user_email']).first().id
 
-        return redirect(url_for('app.index'))
-
-    return 'Internal Server Error', 500
+            return redirect(url_for('app.index'))
+    except Exception as e:
+        print(e)
+        return 'Internal Server Error', 500
 
 
 @bp.route('/login/github')
@@ -136,5 +138,11 @@ def login_github():
 def logout():
     session.clear()
     return redirect(url_for('app.index'))
+
+
+@bp.route('/500')
+def error():
+    return "Internal server error", 500
+
 
 
