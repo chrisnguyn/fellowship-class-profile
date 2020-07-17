@@ -34,7 +34,7 @@ function getPersonalSummary(data) {
         subtitle: "This is what I spent my time working on.",
         subtext: "Repositories worked on",
         list: [],
-        total: data["num_repos"]
+        total: Object.keys(data["repo_changes"]).length
     }
 
     let repos = []
