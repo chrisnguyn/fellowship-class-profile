@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: gunicorn web:app
+  web: gunicorn web:app --log-file -
