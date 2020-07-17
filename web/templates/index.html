@@ -3,9 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Righteous&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/text.css') }}">
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/static.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static',filename='javascript/navbar.js') }}"></script>
@@ -22,18 +20,6 @@
             .style("background-color", colors.white)
             .style("padding", "20px 24px 20px 24px")
         renderNavbar(body)
-        body.append("div")
-            .attr("class", "header")
-            .style("color", colors.black)
-            .html("Class of 2020 Statistics")
-
-        // const loadData = async () => {
-        //     let data = await await fetch(`https://fellowship-class-profile.herokuapp.com/global_stats`)
-        //     data = await data.json()
-        //     body.append("div")
-        //         .style("class", "subheader")
-
-        //     renderPeopleStats(body, data)
 
         body = body.append("div")
             .style("padding", "0 10% 0 10%")
@@ -83,23 +69,35 @@
                 .style("padding", "10px 0px 10px 0px")
 
             ////////start of spider chart///////////////
-            var margin = { top: 30, right: 80, bottom: 20, left: 80 },
+            var margin = {
+                    top: 30,
+                    right: 80,
+                    bottom: 20,
+                    left: 80
+                },
                 width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
                 height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
 
-            var chart_data = [
-                {
-                    name: 'Code contribution stats',
-                    axes: [
-                        { axis: 'Code Reviews', value: Math.log(globalData["num_code_reviews"]) },
-                        { axis: 'Commits', value: Math.log(globalData["num_commits"]) },
-                        { axis: 'Pull Requests', value: Math.log(globalData["num_prs"])},
-                        { axis: 'Issues Opened', value: Math.log(globalData["num_issues_opened"]) },
-                        { axis: 'Issues Contributed To', value: Math.log(globalData["num_issues_contributed"])},
-                    ],
-                    color: '#26AF32'
-                },
-            ];
+            var chart_data = [{
+                name: 'Code contribution stats',
+                axes: [{
+                    axis: 'Code Reviews',
+                    value: Math.log(globalData["num_code_reviews"])
+                }, {
+                    axis: 'Commits',
+                    value: Math.log(globalData["num_commits"])
+                }, {
+                    axis: 'Pull Requests',
+                    value: Math.log(globalData["num_prs"])
+                }, {
+                    axis: 'Issues Opened',
+                    value: Math.log(globalData["num_issues_opened"])
+                }, {
+                    axis: 'Issues Contributed To',
+                    value: Math.log(globalData["num_issues_contributed"])
+                }, ],
+                color: '#26AF32'
+            }, ];
 
             console.log(chart_data[0].color);
 
@@ -109,9 +107,9 @@
                 margin: margin,
                 levels: 5,
                 roundStrokes: true,
-                color: d3.scaleOrdinal().range([colors.green, colors.blue, colors.yellow]),
+                color: d3.scaleOrdinal().range([colors.blue]),
                 format: '.0f',
-                unit: 'e^'    
+                unit: 'e^'
             };
 
             // Draw the radar chart
