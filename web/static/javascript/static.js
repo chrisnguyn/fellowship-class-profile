@@ -9,7 +9,7 @@ let colors = {
 }
 
 const pages = {
-    CLASS_2020: "/",
+    CLASS_0: "/",
     PERSONAL: "/personal",
     LOGIN: "/login"
 }

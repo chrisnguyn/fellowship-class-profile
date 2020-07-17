@@ -74,7 +74,7 @@ function renderNavbar(body) {
 
     function getTabPosition(pathname = window.location.pathname) {
         switch (pathname) {
-            case pages.CLASS_2020:
+            case pages.CLASS_0:
                 return width * 0.25 - tabRectWidth / 2
             case pages.PERSONAL:
                 return width * 0.75 - tabRectWidth / 2
@@ -102,12 +102,12 @@ function renderNavbar(body) {
         .attr("x", width * 0.25)
         .attr("y", height / 2)
         .attr("cursor", "pointer")
-        .text("Class of 2020")
+        .text("Class 0")
         .on("mouseover", function() {
             tabRect.transition()
                 .duration(tabRectTransition)
                 .ease(d3.easeLinear)
-                .attr("x", getTabPosition(pages.CLASS_2020))
+                .attr("x", getTabPosition(pages.CLASS_0))
         })
         .on("mouseout", function() {
             tabRect.transition()
@@ -115,7 +115,7 @@ function renderNavbar(body) {
                 .ease(d3.easeLinear).attr("x", getTabPosition())
         })
         .on("mousedown", function() {
-            window.location.pathname = pages.CLASS_2020
+            window.location.pathname = pages.CLASS_0
         })
     svg.append("text")
         .attr("font-family", textAttr.fontFamily)
