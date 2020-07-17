@@ -130,6 +130,7 @@ def callback():
     except Exception as e:
         traceback.print_exc()
         print(e)
+        raise e
         return 'Something went wrong. Please try again.', 500
 
 
