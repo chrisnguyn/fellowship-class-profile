@@ -1,3 +1,5 @@
+import traceback
+
 import requests
 
 from flask import jsonify, render_template, request, session, redirect, url_for, Blueprint, json
@@ -126,8 +128,9 @@ def callback():
 
         return redirect(url_for('app.index'))
     except Exception as e:
+        traceback.print_exc()
         print(e)
-        return 'Internal Server Error', 500
+        return 'Something went wrong. Please try again.', 500
 
 
 @bp.route('/login/github')
