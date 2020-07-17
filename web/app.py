@@ -47,6 +47,7 @@ def get_user_stats():
 
     return jsonify({"error": "Username not specified"}), 400
 
+
 @bp.route('/global_stats')
 def get_global_stats():
     stats = GlobalStats.query.first()
@@ -73,14 +74,19 @@ def get_global_stats():
     else:
         return jsonify({"error": "Global statistics not found"})
 
+
 @bp.route('/login')
 def login():
+    if session.get('access_token'):
+        return redirect(url_for('app.personal'))
     return render_template('login.html')
 
 
 @bp.route('/personal')
 def personal():
-    return render_template('personal.html')
+    if not session.get('access_token'):
+        redirect(url_for('app.login'))
+    return render_template('personal.html', username=session.get('username'))
 
 
 @bp.route('/status_check')
@@ -104,6 +110,7 @@ def callback():
         github_user_email = requests.get(url + '/emails', params=params).json()
 
         session['github_user_email'] = github_user_email[0]['email']
+        session['username'] = github_user_data['login']
 
         if not User.query.filter_by(email=session['github_user_email']).first():
             new_user = User(github_access_token=access_token,
@@ -114,7 +121,7 @@ def callback():
 
         session['user_id'] = User.query.filter_by(email=session['github_user_email']).first().id
 
-        return redirect(url_for('index'))
+        return redirect(url_for('app.index'))
 
     return 'Internal Server Error', 500
 
@@ -128,6 +135,6 @@ def login_github():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('app.index'))
 
 
